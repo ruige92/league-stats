@@ -1,0 +1,153 @@
+#result-wrapper{
+  width:80%;
+  height:100vh;
+  // background:pink;
+  margin-top:80px;
+  #navSearchBar{
+    position: fixed;
+    top:0;
+    left:25%;
+  }
+  #result-header{
+    width:100%;
+    height:200px;
+    // background:red;
+    border-bottom:1px solid #ccc;
+    #summonerInfo{
+      width:200px;
+      height:200px;
+      display:flex;
+      align-items: center;
+      justify-content: center;
+      list-style-type: none;
+      flex-direction: column;
+      // background:red;
+      #name{
+        font-size:1.2em;
+        font-weight:500;
+      }
+      #level{
+        width:40px;
+        height:25px;
+        border-radius: 5px;
+        background:#f4c542;
+        color:#fff;
+      }
+      img{
+        width:100px;
+        height:100px;
+        border:1px solid #f4c542;
+      }
+    }
+  }
+  #match-wrapper{
+    width:100%;
+    // background:red;
+    display:flex;
+    flex-direction: column;
+    .matchHistory{
+      display:flex;
+      align-items: center;
+      justify-content: space-between;
+      width:100%;
+      height:180px;
+      margin:10px 0;
+      border:1px solid #ccc;
+      .history-header,.history-left,.history-right,.history-mid{
+        width:150px;
+        height:150px;
+        // background:blue;
+        display:flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        // border:1px solid #ccc;
+        .result{
+          font-weight:500;
+          font-size:.8em;
+        }
+        .champName{
+          font-weight:500;
+        }
+        img{
+          width:80px;
+          height:80px;
+          // border:1px solid #f4c542;
+          display:flex;
+        }
+      }
+      .history-header{
+        width:100px;
+      }
+      .history-left{
+        .sumSpells{
+          display:flex;
+          img{
+            width:40px;
+            height:40px;
+          }
+        }
+      }
+      .history-mid{
+        width:80px;
+        font-size:1em;
+        .kda{
+          font-weight:500;
+          .red{
+            color:#ed2f48;
+          }
+        }
+      }
+      .history-right{
+        // background:red;
+        display:flex;
+        flex-direction: row;
+        width:300px;
+        img{
+          width:40px;
+          height:40px;
+        }
+      }
+      .history-allPlayers{
+        height:150px;
+        width:350px;
+        display:flex;
+        justify-content: space-between;
+        // background:pink;
+        .history-t1{
+          height:150px;
+          display:flex;
+          flex-direction: column;
+        }
+        .t1-names,.t2-names{
+          height:30px;
+          width:160px;
+          display: flex;
+          font-size:.8em;
+          justify-content: flex-start;
+          align-items: center;
+          padding-left:5px;
+          // background:green;
+        }
+        .t2-names{
+
+        }
+        .history-t2{
+          height:150px;
+          display:flex;
+          flex-direction: column;
+        }
+        img{
+          width:30px;
+        }
+      }
+    }
+    .Win{
+      background:#aed3f2;
+    }
+    .Fail{
+      background:#f9cbb8;
+    }
+
+  }
+}

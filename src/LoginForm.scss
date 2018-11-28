@@ -1,0 +1,71 @@
+#login-control{
+  height:50px;
+  // background:Red;
+}
+#login, #register, #forgetPass{
+  position:absolute;
+  right:40%;
+  top:25%;
+  height:350px;
+  background:#fff;
+  border:1px solid #ccc;
+  width:300px;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  span{
+    height:40px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    color:red;
+    margin:10px 0;
+  }
+  input{
+    width:150px;
+    height:30px;
+    text-indent:2px;
+  }
+  input:focus{
+    outline:none;
+  }
+  #login-btns{
+    height:60px;
+    width:152px;
+    display:flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: space-between;
+    button{
+      height:30px;
+      width:50px;
+      color:#fff;
+      background:#f4c542;
+      border:0;
+      cursor:pointer;
+    }
+    a{
+      height:20px;
+      font-size: .8em;
+      cursor:pointer;
+    }
+  }
+}
+#register{
+  height:550px;
+  span{
+    font-size:.8em;
+  }
+  input{
+    width:150px;
+    height:30px;
+    text-indent:2px;
+  }
+  #login-btns{
+    button{
+      width:60px;
+      height:30px
+    }
+  }
+}
