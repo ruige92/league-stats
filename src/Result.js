@@ -142,7 +142,7 @@ class Result extends React.Component{
     const imgs = $('.history-right img')
     // console.log(imgs);
     for (let i=0;i<imgs.length;i++){
-      if((imgs[i].getAttribute('alt')==="0")||(imgs[i].getAttribute('alt')==="1018")){
+      if((imgs[i].getAttribute('alt')==="0")||(imgs[i].getAttribute('alt')==="1018")||(imgs[i].getAttribute('alt')==="2301")){
         imgs[i].remove();
       }
       // $(".history-right > img:not(:contains(http))").remove();
@@ -155,6 +155,24 @@ class Result extends React.Component{
       return "Victory";
     }else if(res === "Fail"){
       return "Defeat";
+    }
+  }
+
+  tierBadge=(string)=>{
+    if(string==="DIAMOND"){
+      return './img/base-icons/diamond.png'
+    }else if(string==="PLATINUM"){
+      return './img/base-icons/platinum.png'
+    }else if(string==="GOLD"){
+      return './img/base-icons/gold.png'
+    }else if(string==="SILVER"){
+      return './img/base-icons/silver.png'
+    }else if(string==="UNRANKED"){
+      return './img/base-icons/provisional.png'
+    }else if(string==="MASTER"){
+      return './img/base-icons/master.png'
+    }else if(string==="CHALLENGER"){
+      return './img/base-icons/challenger.png'
     }
   }
 
@@ -174,6 +192,14 @@ class Result extends React.Component{
             <li id="icon"><img src={this.props.icon} alt={this.props.name}/></li>
             <li id="level">{this.props.level}</li>
           </ul>
+          <div id="rank">
+            <img src={this.tierBadge(this.props.tier)} alt={this.props.tier} />
+          </div>
+          <div id="rank-info">
+            <p>{this.props.tier} {this.props.rank}</p>
+            <p>{this.props.leaguePoints} LP / {this.props.wins}W {this.props.losses}L</p>
+            <p>{this.props.leagueName}</p>
+          </div>
         </div>
         <div id="match-wrapper">
           {this.props.matches.map((i,key)=>(

@@ -2,7 +2,7 @@ import React from 'react';
 import './SearchBar.css';
 import $ from 'jquery';
 import Result from './Result';
-import { fetchMatchDetails, fetchSummoner, fetchMatch } from './Fetcher.js';
+import { fetchMatchDetails, fetchSummoner, fetchMatch , fetchRankDetail } from './Fetcher.js';
 
 class SearchBar extends React.Component{
   constructor(props){
@@ -11,11 +11,18 @@ class SearchBar extends React.Component{
       apiKey:'RGAPI-55035d35-3f82-4c8d-b855-01b7d3528bcc',
       region:'',
       currentAccount:{
+        sumId:'',
         id:'',
         name:'',
         level:'',
         icon:'',
-        match:false
+        rank:'',
+        tier:'',
+        leagueName:'',
+        leaguePoints:'',
+        wins:'',
+        losses:'',
+        rankType:''
       },
       error:'',
       match:false,
@@ -122,9 +129,11 @@ class SearchBar extends React.Component{
     })
     const results = fetchSummoner("test", sumRegion, query, this.state.apiKey);
     results.then(res=>{
+      // console.log(res)
       this.setState({
         error:'',
         currentAccount:{
+          sumId:res['id'],
           id:res['accountId'],
           name:res['name'],
           level:res['summonerLevel'],
@@ -135,17 +144,41 @@ class SearchBar extends React.Component{
       // console.log(this.state.currentAccount);
       //Have to call this method during this promise
       this.getMatch();
+      this.getRankDetail();
+
     }).catch(err=>{
       this.setState({
         error:'Summoner Not Found, please try another name!',
-        region:'',
-        currentAccount:{
-          id:'',
-          name:'',
-          level:'',
-          icon:'',
-        },
         match:false
+      })
+    });
+  }
+
+  getRankDetail=()=>{
+    const results = fetchRankDetail("test", this.state.region, this.state.currentAccount['sumId'], this.state.apiKey);
+    results.then(res=>{
+      // console.log(res[0])
+      this.setState({
+        rank:res[0]['rank'],
+        tier:res[0]['tier'],
+        leagueName:res[0]['leagueName'],
+        leaguePoints:res[0]['leaguePoints'],
+        wins:res[0]['wins'],
+        losses:res[0]['losses'],
+        rankType:res[0]['queueType']
+      })
+      // console.log(this.state.currentAccount);
+      //Have to call this method during this promise
+    }).catch(err=>{
+      console.log(err)
+      this.setState({
+        rank:'',
+        tier:'UNRANKED',
+        leagueName:'',
+        leaguePoints:0,
+        wins:0,
+        losses:0,
+        rankType:''
       })
     });
   }
@@ -163,47 +196,22 @@ class SearchBar extends React.Component{
       //Have to call method here;
       this.getMatchDetails3();
     }).catch(err=>{
-      this.setState({
-        error:'Data Not Found',
-        region:'',
-        currentAccount:{
-          id:'',
-          name:'',
-          level:'',
-          icon:'',
-        },
-        match:false
-      })
+      console.log(err)
     });
   }
 
-  getAllPlayers=(res, arr)=>{
-    let t1 = [];
-    let t2 = [];
-    for(let i=0;i<10;i++){
-      if(i<5){
-        t1[i]=(res['participants'][i]['championId']).toString();
-      }else{
-        t2[i]=(res['participants'][i]['championId']).toString();
-      }
-      arr.t1Champs=t1;
-      arr.t2Champs=t2;
-    }
-  }
-
   getMatchDetails3=()=>{
-
     let gameIds = [];
     for(let i=0;i<this.state.matches.length;i++){
       gameIds.push(this.state.matches[i]['gameId']);
     }
     // console.log(gameIds);
-    let results='';
+    let results=[];
     //copy state of matches
     let matches2 = [...this.state.matches];
     for(let i = 0; i<6;i++){
-      results = fetchMatchDetails("test", this.state.region, gameIds[i], this.state.apiKey)
-      results.then(res=>{
+      results[i] = fetchMatchDetails("test", this.state.region, gameIds[i], this.state.apiKey)
+      results[i].then(res=>{
         // console.log(res)
         //add each gameMode into the matches state
         matches2[i].gameMode=res['gameMode'];
@@ -232,6 +240,7 @@ class SearchBar extends React.Component{
         let item4;
         let item5;
         let item6;
+
         //Search and grab additional information for all players
         for(let i = 0 ; i<10; i++){
           // console.log(res['participantIdentities'][i])
@@ -268,6 +277,7 @@ class SearchBar extends React.Component{
           }
         //Search if player won the game or not
         }
+
         for (let i = 0 ; i<res['teams'].length;i++){
           if(currentTeamId === res['teams'][i]['teamId']){
             matchResult = res['teams'][i]['win'];
@@ -333,24 +343,14 @@ class SearchBar extends React.Component{
         //
 
         this.setState({
-          matches:matches2,
+          matches:matches2
         })
         // console.log(this.state.matches[0].playerChampions)
         // console.log(Array.isArray(this.state.matches[0].playerChampions))
         // console.log(this.state.matches)
 
       }).catch(err=>{
-        this.setState({
-          error:'Data Not Found',
-          region:'',
-          currentAccount:{
-            id:'',
-            name:'',
-            level:'',
-            icon:'',
-          },
-          match:false
-        })
+        console.log(err)
       });
     }
   }
@@ -447,7 +447,13 @@ class SearchBar extends React.Component{
       icon={this.state.currentAccount['icon']}
       matches={this.state.matches}
       gameType={this.state.gameType}
-      newSearch={this.state.newSearch}
+      rank={this.state.rank}
+      tier={this.state.tier}
+      leagueName={this.state.leagueName}
+      leaguePoints={this.state.leaguePoints}
+      wins={this.state.wins}
+      losses={this.state.losses}
+      rankType={this.state.rankType}
       />
       {this.navSearchBar()}
       </div>

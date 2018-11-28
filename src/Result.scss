@@ -1,3 +1,7 @@
+* {
+  padding: 0;
+  margin: 0;
+}
 #result-wrapper{
   width:80%;
   height:100vh;
@@ -13,6 +17,7 @@
     height:200px;
     // background:red;
     border-bottom:1px solid #ccc;
+    display:flex;
     #summonerInfo{
       width:200px;
       height:200px;
@@ -38,6 +43,28 @@
         height:100px;
         border:1px solid #f4c542;
       }
+    }
+    #rank{
+      width:100px;
+      height:200px;
+      display:flex;
+      align-items: center;
+      justify-content: center;
+      img{
+        width:100px;
+        height:100px;
+      }
+    }
+    #rank-info{
+      width:200px;
+      height:200px;
+      padding:0 10px;
+      display:flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      font-size:.8em;
+      font-weight:500;
     }
   }
   #match-wrapper{

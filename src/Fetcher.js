@@ -42,5 +42,19 @@ export const fetchMatch=(url, region, accountId, apiKey)=>{
       });
   }
 }
+export const fetchRankDetail=(url, region, sumId, apiKey)=>{
+  const endpoint="https://"+region+".api.riotgames.com/lol/league/v3/positions/by-summoner/"+sumId+"?api_key="+apiKey;
+  if (url) {
+    return fetch(endpoint)
+      .then(response=> {
+        if((response.status === 400) || (response.status === 404)){
+          throw new Error('Error');
+        }
+        return response.json()
+      }).then(result=> {
+          return result;
+      });
+  }
+}
 
 //Capture returned result from JSON RiotAPI

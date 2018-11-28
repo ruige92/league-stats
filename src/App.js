@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import NavBar from './NavBar';
+// import NavBar from './NavBar';
 import SearchBar from './SearchBar';
 // import LoginForm from './LoginForm';
 
