@@ -187,7 +187,7 @@ class SearchBar extends React.Component{
     const results = fetchMatch("test", this.state.region, this.state.currentAccount['id'], this.state.apiKey);
     results.then(res=>{
       let arr = [];
-      for(let i=0;i<6;i++){
+      for(let i=0;i<10;i++){
         arr.push(res['matches'][i]);
       }
       this.setState({
@@ -209,7 +209,7 @@ class SearchBar extends React.Component{
     let results=[];
     //copy state of matches
     let matches2 = [...this.state.matches];
-    for(let i = 0; i<6;i++){
+    for(let i = 0; i<10;i++){
       results[i] = fetchMatchDetails("test", this.state.region, gameIds[i], this.state.apiKey)
       results[i].then(res=>{
         // console.log(res)
