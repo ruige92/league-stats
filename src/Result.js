@@ -7,7 +7,7 @@ let allChamps = '';
 let individual = '';
 function getChampJSON(res){
   $.ajax({
-    url: 'http://ddragon.leagueoflegends.com/cdn/8.23.1/data/en_US/champion.json'
+    url: 'https://ddragon.leagueoflegends.com/cdn/8.23.1/data/en_US/champion.json'
   }).done(function(res){
     allChamps = res;
     individual = Object.entries(allChamps.data)
@@ -19,7 +19,7 @@ let allSums = '';
 let individualSpell = '';
 function getSpellJSON(res){
   $.ajax({
-    url: 'http://ddragon.leagueoflegends.com/cdn/8.23.1/data/en_US/summoner.json'
+    url: 'https://ddragon.leagueoflegends.com/cdn/8.23.1/data/en_US/summoner.json'
   }).done(function(res){
     allSums = res;
     individualSpell = Object.entries(allSums.data)
@@ -31,7 +31,7 @@ let allItems = '';
 let individualItem = '';
 function getItemJSON(res){
   $.ajax({
-    url: 'http://ddragon.leagueoflegends.com/cdn/8.23.1/data/en_US/item.json'
+    url: 'https://ddragon.leagueoflegends.com/cdn/8.23.1/data/en_US/item.json'
   }).done(function(res){
     allItems = res;
     individualItem = Object.entries(allItems.data)
