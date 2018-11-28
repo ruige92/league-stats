@@ -35,8 +35,8 @@ function getItemJSON(res){
   }).done(function(res){
     allItems = res;
     individualItem = Object.entries(allItems.data)
-    console.log(allItems)
-    console.log(individualItem[0])
+    // console.log(allItems)
+    // console.log(individualItem[0])
   })
 }
 
@@ -78,7 +78,7 @@ class Result extends React.Component{
   champIcon=(id)=>{
     let champName = [];
     let champImgName =[];
-    const champIcon = "http://ddragon.leagueoflegends.com/cdn/8.23.1/img/champion/";
+    const champIcon = "https://ddragon.leagueoflegends.com/cdn/8.23.1/img/champion/";
     for (let i = 0; i<individual.length;i++){
       if (id === undefined){
         continue;
@@ -107,7 +107,7 @@ class Result extends React.Component{
   spellIcon=(id)=>{
     let spellName = [];
     let spellImgName =[];
-    const spellIcon = "http://ddragon.leagueoflegends.com/cdn/8.23.1/img/spell/";
+    const spellIcon = "https://ddragon.leagueoflegends.com/cdn/8.23.1/img/spell/";
     for (let i = 0; i<individualSpell.length;i++){
       if (id === undefined){
         continue;
@@ -123,7 +123,7 @@ class Result extends React.Component{
   itemIcon=(id)=>{
     let itemName = [];
     let itemImgName =[];
-    const itemIcon = "http://ddragon.leagueoflegends.com/cdn/8.23.1/img/item/";
+    const itemIcon = "https://ddragon.leagueoflegends.com/cdn/8.23.1/img/item/";
     for (let i = 0; i<individualItem.length;i++){
       if (id === undefined){
         continue;

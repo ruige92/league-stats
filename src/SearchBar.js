@@ -128,7 +128,7 @@ class SearchBar extends React.Component{
           id:res['accountId'],
           name:res['name'],
           level:res['summonerLevel'],
-          icon:"http://ddragon.leagueoflegends.com/cdn/8.23.1/img/profileicon/"+res['profileIconId']+".png"
+          icon:"https://ddragon.leagueoflegends.com/cdn/8.23.1/img/profileicon/"+res['profileIconId']+".png"
         },
         match:true
       })
@@ -207,7 +207,7 @@ class SearchBar extends React.Component{
         // console.log(res)
         //add each gameMode into the matches state
         matches2[i].gameMode=res['gameMode'];
-        console.log('playerId: '+this.state.currentAccount['id']);
+        // console.log('playerId: '+this.state.currentAccount['id']);
         const playerId = this.state.currentAccount['id'];
         //Logic for grabbing currentplayer's participant number fisrt
         //Then moving on to get it's team id
