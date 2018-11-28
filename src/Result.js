@@ -142,7 +142,7 @@ class Result extends React.Component{
     const imgs = $('.history-right img')
     // console.log(imgs);
     for (let i=0;i<imgs.length;i++){
-      if(imgs[i].getAttribute('alt')==="0"){
+      if((imgs[i].getAttribute('alt')==="0")||(imgs[i].getAttribute('alt')==="1018")){
         imgs[i].remove();
       }
       // $(".history-right > img:not(:contains(http))").remove();
