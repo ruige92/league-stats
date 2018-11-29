@@ -286,7 +286,11 @@ class Result extends React.Component{
       <div className="rankSlot">
         <div className="noRankImg">
           <img src={this.tierBadge("UNRANKED")} alt="UNRANKED" />
-          <p>UNRANKED</p>
+        </div>
+        <div className="rank-info">
+          <p>Ranked Solo</p>
+          <p className="tier">UNRANKED</p>
+          <p>0 LP / 0W 0L</p>
         </div>
       </div>
     )

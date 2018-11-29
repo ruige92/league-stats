@@ -163,7 +163,7 @@ class SearchBar extends React.Component{
     })
     results = fetchSummoner("test", sumRegion, query, this.state.apiKey);
     results.then(res=>{
-      console.log(res)
+      // console.log(res)
       this.setState({
         error:'',
         currentAccount:{
@@ -194,7 +194,7 @@ class SearchBar extends React.Component{
   getRankDetail=()=>{
     const results = fetchRankDetail("test", this.state.region, this.state.currentAccount['sumId'], this.state.apiKey);
     results.then(res=>{
-      console.log(res)
+      // console.log(res)
       //Reset rank stats before fetching new ones
       if(res.length === 0){
         this.setState({
@@ -287,7 +287,7 @@ class SearchBar extends React.Component{
       // console.log(this.state.currentAccount);
       //Have to call this method during this promise
     }).catch(err=>{
-      console.log(err)
+      // console.log(err)
       this.setState({
         soloRank:'',
         soloTier:'UNRANKED',
@@ -306,7 +306,7 @@ class SearchBar extends React.Component{
   getMatch=()=>{
     const results = fetchMatch("test", this.state.region, this.state.currentAccount['id'], this.state.apiKey);
     results.then(res=>{
-      console.log(res);
+      // console.log(res);
       let arr = [];
       for(let i=0;i<6;i++){
         arr.push(res['matches'][i]);
@@ -340,7 +340,7 @@ class SearchBar extends React.Component{
     for(let i = 0; i<6;i++){
       results[i] = fetchMatchDetails("test", this.state.region, gameIds[i], this.state.apiKey)
       results[i].then(res=>{
-        console.log(res)
+        // console.log(res)
         //add each gameMode into the matches state
         matches2[i].gameMode=res['gameMode'];
         matches2[i].queueType=res['queueId'];
@@ -404,7 +404,7 @@ class SearchBar extends React.Component{
           }else {
             t2[i] = (res['participants'][i]['championId']).toString();
             t2names[i] = res['participantIdentities'][i]['player']['summonerName'];
-            console.log(i+': '+t2names[i]);
+            // console.log(i+': '+t2names[i]);
           }
 
         }
@@ -499,7 +499,7 @@ class SearchBar extends React.Component{
         // console.log(this.state.matches[0].playerChampions)
         // console.log(Array.isArray(this.state.matches[0].playerChampions))
         // console.log(this.state.matches)
-        console.log(this.state.matches);
+        // console.log(this.state.matches);
         this.navSearchBar();
       }).catch(err=>{
         console.log(err)
@@ -642,21 +642,6 @@ class SearchBar extends React.Component{
       </div> :null}
 
       </div>
-    )
-
-    const onlySearch=(
-
-      <div id="SearchBar">
-        <p id="error">{this.state.error}</p>
-        <select id="sumRegion" onChange={this.setRegion}>
-          <option value="euw1">EU West</option>
-          <option value="eun1">EU Nordic & East</option>
-          <option value="na1">North America</option>
-        </select>
-        <input id="sumName" type="text" placeholder="Summoner Name"/>
-        <button id="submit" onClick={this.newSearch}>Search</button>
-      </div>
-
     )
 
     // const resultPage = (
