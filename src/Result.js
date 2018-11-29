@@ -66,12 +66,13 @@ class Result extends React.Component{
     // this.setState({
     //   loading:false
     // })
-
   }
 
   componentDidUpdate(){
     //after rendered, use filter to remove empty slot items
-    this.filterEmptyItemIcon2();
+    // this.filterEmptyItemIcon2();
+    this.resetNameFields();
+    this.highlightCurrentPlayerName();
   }
 
   // grab champion icon data from ddragon when giving it an id
@@ -134,20 +135,31 @@ class Result extends React.Component{
       }
 
     }
-    if(!this.state.loading){this.filterEmptyItemIcon2()}
+    // if(!this.state.loading){
+    //   this.filterEmptyItemIcon2();
+    //
+    // }
     return itemImgName = itemImgName.join("");
   }
   //
-  filterEmptyItemIcon2=()=>{
-    const imgs = $('.history-right img')
-    // console.log(imgs);
-    for (let i=0;i<imgs.length;i++){
-      if((imgs[i].getAttribute('alt')==="0")||(imgs[i].getAttribute('alt')==="1018")||(imgs[i].getAttribute('alt')==="2301")){
-        imgs[i].remove();
-      }
-      // $(".history-right > img:not(:contains(http))").remove();
-      // $(".history-right img:not([src~='http://'])").remove();
-    }
+  // filterEmptyItemIcon2=()=>{
+  //   const imgs = $('.history-right img')
+  //   // console.log(imgs);
+  //   for (let i=0;i<imgs.length;i++){
+  //     if((imgs[i].getAttribute('alt')==="0")||(imgs[i].getAttribute('alt')==="1018")||(imgs[i].getAttribute('alt')==="2301")){
+  //       imgs[i].remove();
+  //     }
+  //   }
+  // }
+
+  resetNameFields=()=>{
+    $('.t1-names').css({'font-weight':'400'});
+    $('.t2-names').css({'font-weight':'400'});
+  }
+  highlightCurrentPlayerName=()=>{
+    const name=$('#summonerInfo #name').text();
+    $('.t1-names:contains('+name+')').css({'font-weight':'500'});
+    $('.t2-names:contains('+name+')').css({'font-weight':'500'});
   }
   // Convert final match result into game term Victory or Defeat
   finalResult=(res)=>{
@@ -185,6 +197,38 @@ class Result extends React.Component{
       return "Flex 5:5 Rank"
     }else if(name==="RANKED_FLEX_TT"){
       return "Flex 3:3 Rank"
+    }
+  }
+
+  queueType=(id)=>{
+    if(id===450){
+      return "ARAM"
+    }else if(id===325){
+      return "All Random"
+    }else if(id===0){
+      return "Custom Game"
+    }else if(id===75){
+      return "6:6 Hexakill"
+    }else if(id===76){
+      return "URF"
+    }else if(id===420){
+      return "Ranked Solo"
+    }else if(id===430){
+      return "Normal 5:5"
+    }else if(id===440){
+      return "Flex 5:5"
+    }else if(id===460){
+      return "Twisted Treeline"
+    }else if(id===470){
+      return "Flex 3:3"
+    }else if(id===920){
+      return "King Poro"
+    }else if(id===400){
+      return "Normal"
+    }else if(id===850){
+      return "Bot"
+    }else if(id===700){
+      return "Clash"
     }
   }
 
@@ -266,9 +310,9 @@ class Result extends React.Component{
           {this.props.matches.map((i,key)=>(
             <div className={`matchHistory ${i.finalResult}`} id={'match_'+i} key={key}>
               <div className="history-header">
+                <p className="result">{this.queueType(i.queueType)}</p>
                 <p className="result">Season {i.season}</p>
                 <p className="result">{i.lane}</p>
-                <p className="result">{i.gameMode}</p>
                 <p className="result"> {this.finalResult(i.finalResult)} </p>
               </div>
               <div className="history-left">
@@ -284,42 +328,42 @@ class Result extends React.Component{
                 <p>Level {i.champLevel}</p>
               </div>
               <div className="history-right">
-                <img src={this.itemIcon(i.item0)} alt={i.item0} />
-                <img src={this.itemIcon(i.item1)} alt={i.item1} />
-                <img src={this.itemIcon(i.item2)} alt={i.item2} />
-                <img src={this.itemIcon(i.item3)} alt={i.item3} />
-                <img src={this.itemIcon(i.item4)} alt={i.item4} />
-                <img src={this.itemIcon(i.item5)} alt={i.item5} />
-                <img src={this.itemIcon(i.item6)} alt={i.item6} />
+                {i.item0===0? null:<img src={this.itemIcon(i.item0)} alt={i.item0} />}
+                {i.item1===0? null:<img src={this.itemIcon(i.item1)} alt={i.item1} />}
+                {i.item2===0? null:<img src={this.itemIcon(i.item2)} alt={i.item2} />}
+                {i.item3===0? null:<img src={this.itemIcon(i.item3)} alt={i.item3} />}
+                {i.item4===0? null:<img src={this.itemIcon(i.item4)} alt={i.item4} />}
+                {i.item5===0? null:<img src={this.itemIcon(i.item5)} alt={i.item5} />}
+
               </div>
               <div className="history-allPlayers">
-                <div className="history-t1">
+                <div className="history">
                   <img src={this.champIcon(i.t1Champ0)} alt={i.t1Champ0} />
                   <img src={this.champIcon(i.t1Champ1)} alt={i.t1Champ1} />
                   <img src={this.champIcon(i.t1Champ2)} alt={i.t1Champ2} />
-                  <img src={this.champIcon(i.t1Champ3)} alt={i.t1Champ3} />
-                  <img src={this.champIcon(i.t1Champ4)} alt={i.t1Champ4} />
+                  {i.t1Champ3===undefined? null:<img src={this.champIcon(i.t1Champ3)} alt={i.t1Champ3} /> }
+                  {i.t1Champ4===undefined? null:<img src={this.champIcon(i.t1Champ4)} alt={i.t1Champ4} /> }
                 </div>
-                <div>
+                <div className="history">
                   <p className="t1-names" onClick={() => this.sendSearchName(i.t1Name0)}>{i.t1Name0}</p>
                   <p className="t1-names" onClick={() => this.sendSearchName(i.t1Name1)}>{i.t1Name1}</p>
                   <p className="t1-names" onClick={() => this.sendSearchName(i.t1Name2)}>{i.t1Name2}</p>
-                  <p className="t1-names" onClick={() => this.sendSearchName(i.t1Name3)}>{i.t1Name3}</p>
-                  <p className="t1-names" onClick={() => this.sendSearchName(i.t1Name4)}>{i.t1Name4}</p>
+                  {i.t1Name3===undefined? null:<p className="t1-names" onClick={() => this.sendSearchName(i.t1Name3)}>{i.t1Name3}</p>}
+                  {i.t1Name4===undefined? null:<p className="t1-names" onClick={() => this.sendSearchName(i.t1Name4)}>{i.t1Name4}</p>}
                 </div>
-                <div className="history-t2">
-                  <img src={this.champIcon(i.t2Champ0)} alt={i.t2Champ0} />
-                  <img src={this.champIcon(i.t2Champ1)} alt={i.t2Champ1} />
-                  <img src={this.champIcon(i.t2Champ2)} alt={i.t2Champ2} />
-                  <img src={this.champIcon(i.t2Champ3)} alt={i.t2Champ3} />
-                  <img src={this.champIcon(i.t2Champ4)} alt={i.t2Champ4} />
+                <div className="history">
+                  <img src={i.t2Champ0===undefined ? this.champIcon(i.tt2Champ0):this.champIcon(i.t2Champ0)} alt={i.t2Champ0===undefined ? i.tt2Champ0:i.t2Champ0} />
+                  <img src={i.t2Champ1===undefined ? this.champIcon(i.tt2Champ1):this.champIcon(i.t2Champ1)} alt={i.t2Champ1===undefined ? i.tt2Champ1:i.t2Champ1} />
+                  <img src={i.t2Champ2===undefined ? this.champIcon(i.tt2Champ2):this.champIcon(i.t2Champ2)} alt={i.t2Champ2===undefined ? i.tt2Champ2:i.t2Champ2} />
+                  {i.t2Champ3===undefined? null:<img src={this.champIcon(i.t2Champ3)} alt={i.t2Champ3} /> }
+                  {i.t2Champ4===undefined? null:<img src={this.champIcon(i.t2Champ4)} alt={i.t2Champ4} /> }
                 </div>
-                <div>
-                  <p className="t2-names" onClick={() => this.sendSearchName(i.t2Name0)}>{i.t2Name0}</p>
-                  <p className="t2-names" onClick={() => this.sendSearchName(i.t2Name1)}>{i.t2Name1}</p>
-                  <p className="t2-names" onClick={() => this.sendSearchName(i.t2Name2)}>{i.t2Name2}</p>
-                  <p className="t2-names" onClick={() => this.sendSearchName(i.t2Name3)}>{i.t2Name3}</p>
-                  <p className="t2-names" onClick={() => this.sendSearchName(i.t2Name4)}>{i.t2Name4}</p>
+                <div className="history">
+                  <p className="t2-names" onClick={() => i.t2Name0===undefined? this.sendSearchName(i.tt2Name0):this.sendSearchName(i.t2Name0)}>{i.t2Name0===undefined? i.tt2Name0:i.t2Name0}</p>
+                  <p className="t2-names" onClick={() => i.t2Name1===undefined? this.sendSearchName(i.tt2Name1):this.sendSearchName(i.t2Name1)}>{i.t2Name1===undefined? i.tt2Name1:i.t2Name1}</p>
+                  <p className="t2-names" onClick={() => i.t2Name2===undefined? this.sendSearchName(i.tt2Name2):this.sendSearchName(i.t2Name2)}>{i.t2Name2===undefined? i.tt2Name2:i.t2Name2}</p>
+                  {i.t2Name3===undefined? null:<p className="t2-names" onClick={() => this.sendSearchName(i.t2Name3)}>{i.t2Name3}</p>}
+                  {i.t2Name4===undefined? null:<p className="t2-names" onClick={() => this.sendSearchName(i.t2Name4)}>{i.t2Name4}</p>}
                 </div>
               </div>
             </div>

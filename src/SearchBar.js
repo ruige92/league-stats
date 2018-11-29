@@ -155,10 +155,6 @@ class SearchBar extends React.Component{
 
   getSummoner=()=>{
     let results='';
-    if(this.state.region==='euw1'){
-      const query = document.querySelector('#sumName').value;
-      results = fetchSummoner("test", this.state.region, query, this.state.apiKey);
-    }else{
     const query = document.querySelector('#sumName').value;
     const region = document.querySelector('#sumRegion');
     const sumRegion = region.options[region.selectedIndex].value;
@@ -166,9 +162,8 @@ class SearchBar extends React.Component{
       region:sumRegion
     })
     results = fetchSummoner("test", sumRegion, query, this.state.apiKey);
-    }
     results.then(res=>{
-      // console.log(res)
+      console.log(res)
       this.setState({
         error:'',
         currentAccount:{
@@ -192,13 +187,14 @@ class SearchBar extends React.Component{
       })
       $('#SearchBar').removeClass('navSearch');
       $('#SearchBar').fadeIn(100);
+      $('#result-content').fadeIn(100);
     });
   }
 
   getRankDetail=()=>{
     const results = fetchRankDetail("test", this.state.region, this.state.currentAccount['sumId'], this.state.apiKey);
     results.then(res=>{
-      // console.log(res)
+      console.log(res)
       //Reset rank stats before fetching new ones
       if(res.length === 0){
         this.setState({
@@ -301,15 +297,18 @@ class SearchBar extends React.Component{
         soloLosses:0,
         soloRankType:''
       })
+      $('#SearchBar').removeClass('navSearch');
       $('#SearchBar').fadeIn(100);
+      $('#result-content').fadeIn(100);
     });
   }
 
   getMatch=()=>{
     const results = fetchMatch("test", this.state.region, this.state.currentAccount['id'], this.state.apiKey);
     results.then(res=>{
+      console.log(res);
       let arr = [];
-      for(let i=0;i<5;i++){
+      for(let i=0;i<6;i++){
         arr.push(res['matches'][i]);
       }
       this.setState({
@@ -323,7 +322,9 @@ class SearchBar extends React.Component{
         error:'No recent data for this summoner',
         match:false
       })
+      $('#SearchBar').removeClass('navSearch');
       $('#SearchBar').fadeIn(100);
+      $('#result-content').fadeIn(100);
     });
   }
 
@@ -336,14 +337,16 @@ class SearchBar extends React.Component{
     let results=[];
     //copy state of matches
     let matches2 = [...this.state.matches];
-    for(let i = 0; i<5;i++){
+    for(let i = 0; i<6;i++){
       results[i] = fetchMatchDetails("test", this.state.region, gameIds[i], this.state.apiKey)
       results[i].then(res=>{
-        // console.log(res)
+        console.log(res)
         //add each gameMode into the matches state
         matches2[i].gameMode=res['gameMode'];
+        matches2[i].queueType=res['queueId'];
         // console.log('playerId: '+this.state.currentAccount['id']);
         const playerId = this.state.currentAccount['id'];
+        // console.log("id: "+playerId)
         //Logic for grabbing currentplayer's participant number fisrt
         //Then moving on to get it's team id
         //Then grabbing it's match result, win or lose.
@@ -369,8 +372,8 @@ class SearchBar extends React.Component{
         let item6;
 
         //Search and grab additional information for all players
-        for(let i = 0 ; i<10; i++){
-          // console.log(res['participantIdentities'][i])
+        for(let i = 0 ; i<res['participants'].length; i++){
+          // console.log(i+':'+res['participantIdentities'][i]['player'])
           if(playerId === res['participantIdentities'][i]['player']['currentAccountId']){
             currentParticipantNum = res['participantIdentities'][i]['participantId'];
             spell1=res['participants'][i]['spell1Id'];
@@ -383,7 +386,7 @@ class SearchBar extends React.Component{
             item5=res['participants'][i]['stats']['item5'];
             item6=res['participants'][i]['stats']['item6'];
             // console.log(currentParticipantNum);
-            // console.log(res['participants'][i]['participantId'])
+            // console.log(res['participants'][i]['stats']['item0'])
             if (currentParticipantNum === res['participants'][i]['participantId']){
               currentTeamId = res['participants'][i]['teamId'];
               kills = res['participants'][i]['stats']['kills'];
@@ -401,10 +404,18 @@ class SearchBar extends React.Component{
           }else {
             t2[i] = (res['participants'][i]['championId']).toString();
             t2names[i] = res['participantIdentities'][i]['player']['summonerName'];
+            console.log(i+': '+t2names[i]);
           }
-        //Search if player won the game or not
-        }
 
+        }
+        // for(let i = 0;i<res['participants'].length;i++){
+        //   if((res['participants'][i])===undefined){
+        //     continue;
+        //   }
+        //
+        // }
+
+        //Search if player won the game or not
         for (let i = 0 ; i<res['teams'].length;i++){
           if(currentTeamId === res['teams'][i]['teamId']){
             matchResult = res['teams'][i]['win'];
@@ -412,6 +423,17 @@ class SearchBar extends React.Component{
           }
         }
 
+        //For Twisted Treeline ONLY, where there's only 6 participants
+        //Values for 6 players champion ids
+        matches2[i].tt2Champ0=t2[5];
+        matches2[i].tt2Champ1=t2[4];
+        matches2[i].tt2Champ2=t2[3];
+        //Values for 6 players player names
+        matches2[i].tt2Name0=t2names[5];
+        matches2[i].tt2Name1=t2names[4];
+        matches2[i].tt2Name2=t2names[3];
+
+        //Values for getting match items
         matches2[i].item0=item0;
         matches2[i].item1=item1;
         matches2[i].item2=item2;
@@ -419,7 +441,7 @@ class SearchBar extends React.Component{
         matches2[i].item4=item4;
         matches2[i].item5=item5;
         matches2[i].item6=item6;
-
+        //Values for Normal 10 players champion ids
         matches2[i].t1Champ0=t1[0];
         matches2[i].t1Champ1=t1[1];
         matches2[i].t1Champ2=t1[2];
@@ -430,7 +452,7 @@ class SearchBar extends React.Component{
         matches2[i].t2Champ2=t2[7];
         matches2[i].t2Champ3=t2[8];
         matches2[i].t2Champ4=t2[9];
-
+        //Values for Normal 10 players names
         matches2[i].t1Name0=t1names[0];
         matches2[i].t1Name1=t1names[1];
         matches2[i].t1Name2=t1names[2];
@@ -441,6 +463,7 @@ class SearchBar extends React.Component{
         matches2[i].t2Name2=t2names[7];
         matches2[i].t2Name3=t2names[8];
         matches2[i].t2Name4=t2names[9];
+
         //
         // matches2[i].p20Champ=p2[0];
         // matches2[i].p21Champ=p2[1];
@@ -453,6 +476,7 @@ class SearchBar extends React.Component{
         // matches2[i].p28Champ=p2[8];
         // matches2[i].p29Champ=p2[9];
         // this.getAllPlayers(res, matches2[i]);
+        //Values for currentplayer information, such as kda stats
         matches2[i].spell1=spell1;
         matches2[i].spell2=spell2;
         matches2[i].kills=kills;
@@ -475,6 +499,7 @@ class SearchBar extends React.Component{
         // console.log(this.state.matches[0].playerChampions)
         // console.log(Array.isArray(this.state.matches[0].playerChampions))
         // console.log(this.state.matches)
+        console.log(this.state.matches);
         this.navSearchBar();
       }).catch(err=>{
         console.log(err)
@@ -482,7 +507,9 @@ class SearchBar extends React.Component{
           error:'No recent data for this summoner',
           match:false
         })
+        $('#SearchBar').removeClass('navSearch');
         $('#SearchBar').fadeIn(100);
+        $('#result-content').fadeIn(100);
       });
     }
   }
@@ -578,13 +605,14 @@ class SearchBar extends React.Component{
         <input id="sumName" type="text" placeholder="Summoner Name"/>
         <button id="submit" onClick={this.newSearch}>Search</button>
       </div>
-      <div id="SearchResult">
+      {this.state.match? <div id="SearchResult">
         <Result
         name={this.state.currentAccount['name']}
         level={this.state.currentAccount['level']}
         icon={this.state.currentAccount['icon']}
         matches={this.state.matches}
         gameType={this.state.gameType}
+        queueType={this.state.queueType}
         soloRank={this.state.soloRank}
         soloTier={this.state.soloTier}
         soloLeagueName={this.state.soloLeagueName}
@@ -611,7 +639,7 @@ class SearchBar extends React.Component{
         flex5RankFound={this.state.flex5RankFound}
         flex3RankFound={this.state.flex3RankFound}
         />
-      </div>
+      </div> :null}
 
       </div>
     )
@@ -655,7 +683,7 @@ class SearchBar extends React.Component{
 
     return(
       <div id="main-wrapper">
-        {this.state.match? searchBar:onlySearch}
+        {searchBar}
       </div>
     )
 

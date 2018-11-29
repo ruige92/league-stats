@@ -105,7 +105,7 @@
     .matchHistory{
       display:flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: space-evenly;
       width:100%;
       height:180px;
       margin:10px 0;
@@ -137,6 +137,7 @@
         width:100px;
       }
       .history-left{
+        width:100px;
         .sumSpells{
           display:flex;
           img{
@@ -159,7 +160,7 @@
         // background:red;
         display:flex;
         flex-direction: row;
-        width:300px;
+        width:400px;
         img{
           width:40px;
           height:40px;
@@ -169,16 +170,18 @@
         height:150px;
         width:350px;
         display:flex;
-        justify-content: space-between;
+        justify-content: flex-end;
         // background:pink;
-        .history-t1{
+        .history{
           height:150px;
           display:flex;
           flex-direction: column;
+          align-items: center;
+          justify-content: center;
         }
         .t1-names,.t2-names{
           height:30px;
-          width:160px;
+          width:120px;
           display: flex;
           font-size:.8em;
           justify-content: flex-start;
@@ -189,11 +192,6 @@
         }
         .t1-names:hover,.t2-names:hover{
           color:#333;
-        }
-        .history-t2{
-          height:150px;
-          display:flex;
-          flex-direction: column;
         }
         img{
           width:30px;

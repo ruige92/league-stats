@@ -1,5 +1,5 @@
 export const fetchMatchDetails=(url, region, query, apiKey)=> {
-  const endpoint="https://"+region+".api.riotgames.com/lol/match/v3/matches/"+query+"?api_key="+apiKey;
+  const endpoint="https://"+region+".api.riotgames.com/lol/match/v4/matches/"+query+"?api_key="+apiKey;
   if (url) {
     return fetch(endpoint)
       .then(response=> {
@@ -17,7 +17,7 @@ export const fetchMatchDetails=(url, region, query, apiKey)=> {
 }
 
 export const fetchSummoner=(url, region, query, apiKey)=> {
-  const endpoint="https://"+region+".api.riotgames.com/lol/summoner/v3/summoners/by-name/"+query+"?api_key="+apiKey;
+  const endpoint="https://"+region+".api.riotgames.com/lol/summoner/v4/summoners/by-name/"+query+"?api_key="+apiKey;
   if (url) {
     return fetch(endpoint)
       .then(response=> {
@@ -35,7 +35,7 @@ export const fetchSummoner=(url, region, query, apiKey)=> {
 }
 
 export const fetchMatch=(url, region, accountId, apiKey)=>{
-  const endpoint="https://"+region+".api.riotgames.com/lol/match/v3/matchlists/by-account/"+accountId+"?api_key="+apiKey;
+  const endpoint="https://"+region+".api.riotgames.com/lol/match/v4/matchlists/by-account/"+accountId+"?api_key="+apiKey;
   if (url) {
     return fetch(endpoint)
       .then(response=> {
@@ -52,7 +52,7 @@ export const fetchMatch=(url, region, accountId, apiKey)=>{
   }
 }
 export const fetchRankDetail=(url, region, sumId, apiKey)=>{
-  const endpoint="https://"+region+".api.riotgames.com/lol/league/v3/positions/by-summoner/"+sumId+"?api_key="+apiKey;
+  const endpoint="https://"+region+".api.riotgames.com/lol/league/v4/positions/by-summoner/"+sumId+"?api_key="+apiKey;
   if (url) {
     return fetch(endpoint)
       .then(response=> {
