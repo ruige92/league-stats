@@ -3,12 +3,15 @@ export const fetchMatchDetails=(url, region, query, apiKey)=> {
   if (url) {
     return fetch(endpoint)
       .then(response=> {
-        if((response.status === 400) || (response.status === 404)){
-          throw new Error('Error');
+        if(response.status === 200 && response.ok){
+          return response.json();
+        }else{
+          throw new Error('fetchMatchDetails failed');
         }
-        return response.json()
       }).then(result=> {
           return result;
+      }).catch(error => {
+          console.log(error)
       });
   }
 }
@@ -18,12 +21,15 @@ export const fetchSummoner=(url, region, query, apiKey)=> {
   if (url) {
     return fetch(endpoint)
       .then(response=> {
-        if((response.status === 400) || (response.status === 404)){
-          throw new Error('Error');
+        if(response.status === 200 && response.ok){
+          return response.json();
+        }else{
+          throw new Error('fetchSummoner failed');
         }
-        return response.json()
       }).then(result=> {
           return result;
+      }).catch(error => {
+          console.log(error)
       });
   }
 }
@@ -33,12 +39,15 @@ export const fetchMatch=(url, region, accountId, apiKey)=>{
   if (url) {
     return fetch(endpoint)
       .then(response=> {
-        if((response.status === 400) || (response.status === 404)){
-          throw new Error('Error');
+        if(response.status === 200 && response.ok){
+          return response.json();
+        }else{
+          throw new Error('fetchMatch failed');
         }
-        return response.json()
       }).then(result=> {
           return result;
+      }).catch(error => {
+          console.log(error)
       });
   }
 }
@@ -47,12 +56,15 @@ export const fetchRankDetail=(url, region, sumId, apiKey)=>{
   if (url) {
     return fetch(endpoint)
       .then(response=> {
-        if((response.status === 400) || (response.status === 404)){
-          throw new Error('Error');
+        if(response.status === 200 && response.ok){
+          return response.json();
+        }else{
+          throw new Error('fetchRankDetail failed');
         }
-        return response.json()
       }).then(result=> {
           return result;
+      }).catch(error => {
+          console.log(error)
       });
   }
 }

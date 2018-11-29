@@ -62,7 +62,7 @@ class Result extends React.Component{
 
   componentDidMount(){
     //Give some time to render, so if its loading then not going to show the result page
-    setTimeout(() => this.setState({ loading: false }), 1500);
+    setTimeout(() => this.setState({ loading: false }), 500);
     // this.setState({
     //   loading:false
     // })
@@ -173,14 +173,80 @@ class Result extends React.Component{
       return './img/base-icons/master.png'
     }else if(string==="CHALLENGER"){
       return './img/base-icons/challenger.png'
+    }else if(string==="BRONZE"){
+      return './img/base-icons/bronze.png'
+    }
+  }
+
+  rankType=(name)=>{
+    if(name==="RANKED_SOLO_5x5"){
+      return "Ranked Solo"
+    }else if(name==="RANKED_FLEX_SR"){
+      return "Flex 5:5 Rank"
+    }else if(name==="RANKED_FLEX_TT"){
+      return "Flex 3:3 Rank"
     }
   }
 
   // getMatchDetails=()=>{
   //   return this.props.matchDetails.map((i,key)=><p key={key}>{i.gameMode}</p>);
   // }
+  sendSearchName=(name)=>{
+    this.props.getSearchName(name);
+  }
 
   render(){
+    const flex5Rank=(
+      <div className="rankSlot">
+        <div className="rankImg">
+          <img src={this.tierBadge(this.props.flex5Tier)} alt={this.props.flex5Tier} />
+        </div>
+        <div className="rank-info">
+          <p>{this.rankType(this.props.flex5RankType)}</p>
+          <p className="tier">{this.props.flex5Tier} {this.props.flex5Rank}</p>
+          <p>{this.props.flex5LeaguePoints} LP / {this.props.flex5Wins}W {this.props.flex5Losses}L</p>
+          <p>{this.props.flex5LeagueName}</p>
+        </div>
+      </div>
+    )
+
+    const flex3Rank=(
+      <div className="rankSlot">
+        <div className="rankImg">
+          <img src={this.tierBadge(this.props.flex3Tier)} alt={this.props.flex3Tier} />
+        </div>
+        <div className="rank-info">
+          <p>{this.rankType(this.props.flex3RankType)}</p>
+          <p className="tier">{this.props.flex3Tier} {this.props.flex3Rank}</p>
+          <p>{this.props.flex3LeaguePoints} LP / {this.props.flex3Wins}W {this.props.flex3Losses}L</p>
+          <p>{this.props.flex3LeagueName}</p>
+        </div>
+      </div>
+    )
+
+    const soloRank=(
+      <div className="rankSlot">
+        <div className="rankImg">
+          <img src={this.tierBadge(this.props.soloTier)} alt={this.props.soloTier} />
+        </div>
+        <div className="rank-info">
+          <p>{this.rankType(this.props.soloRankType)}</p>
+          <p className="tier">{this.props.soloTier} {this.props.soloRank}</p>
+          <p>{this.props.soloLeaguePoints} LP / {this.props.soloWins}W {this.props.soloLosses}L</p>
+          <p>{this.props.soloLeagueName}</p>
+        </div>
+      </div>
+    )
+
+    const noRank=(
+      <div className="rankSlot">
+        <div className="noRankImg">
+          <img src={this.tierBadge("UNRANKED")} alt="UNRANKED" />
+          <p>UNRANKED</p>
+        </div>
+      </div>
+    )
+
     if(this.state.loading){
       return null;
     }else{
@@ -192,14 +258,9 @@ class Result extends React.Component{
             <li id="icon"><img src={this.props.icon} alt={this.props.name}/></li>
             <li id="level">{this.props.level}</li>
           </ul>
-          <div id="rank">
-            <img src={this.tierBadge(this.props.tier)} alt={this.props.tier} />
-          </div>
-          <div id="rank-info">
-            <p>{this.props.tier} {this.props.rank}</p>
-            <p>{this.props.leaguePoints} LP / {this.props.wins}W {this.props.losses}L</p>
-            <p>{this.props.leagueName}</p>
-          </div>
+            {this.props.soloRankFound? soloRank:noRank}
+            {this.props.flex5RankFound? flex5Rank:null}
+            {this.props.flex3RankFound? flex3Rank:null}
         </div>
         <div id="match-wrapper">
           {this.props.matches.map((i,key)=>(
@@ -240,11 +301,11 @@ class Result extends React.Component{
                   <img src={this.champIcon(i.t1Champ4)} alt={i.t1Champ4} />
                 </div>
                 <div>
-                  <p className="t1-names">{i.t1Name0}</p>
-                  <p className="t1-names">{i.t1Name1}</p>
-                  <p className="t1-names">{i.t1Name2}</p>
-                  <p className="t1-names">{i.t1Name3}</p>
-                  <p className="t1-names">{i.t1Name4}</p>
+                  <p className="t1-names" onClick={() => this.sendSearchName(i.t1Name0)}>{i.t1Name0}</p>
+                  <p className="t1-names" onClick={() => this.sendSearchName(i.t1Name1)}>{i.t1Name1}</p>
+                  <p className="t1-names" onClick={() => this.sendSearchName(i.t1Name2)}>{i.t1Name2}</p>
+                  <p className="t1-names" onClick={() => this.sendSearchName(i.t1Name3)}>{i.t1Name3}</p>
+                  <p className="t1-names" onClick={() => this.sendSearchName(i.t1Name4)}>{i.t1Name4}</p>
                 </div>
                 <div className="history-t2">
                   <img src={this.champIcon(i.t2Champ0)} alt={i.t2Champ0} />
@@ -254,11 +315,11 @@ class Result extends React.Component{
                   <img src={this.champIcon(i.t2Champ4)} alt={i.t2Champ4} />
                 </div>
                 <div>
-                  <p className="t2-names">{i.t2Name0}</p>
-                  <p className="t2-names">{i.t2Name1}</p>
-                  <p className="t2-names">{i.t2Name2}</p>
-                  <p className="t2-names">{i.t2Name3}</p>
-                  <p className="t2-names">{i.t2Name4}</p>
+                  <p className="t2-names" onClick={() => this.sendSearchName(i.t2Name0)}>{i.t2Name0}</p>
+                  <p className="t2-names" onClick={() => this.sendSearchName(i.t2Name1)}>{i.t2Name1}</p>
+                  <p className="t2-names" onClick={() => this.sendSearchName(i.t2Name2)}>{i.t2Name2}</p>
+                  <p className="t2-names" onClick={() => this.sendSearchName(i.t2Name3)}>{i.t2Name3}</p>
+                  <p className="t2-names" onClick={() => this.sendSearchName(i.t2Name4)}>{i.t2Name4}</p>
                 </div>
               </div>
             </div>

@@ -44,19 +44,41 @@
   height: 100px;
   border: 1px solid #f4c542;
 }
-#result-wrapper #result-header #rank {
+#result-wrapper #result-header .rankSlot {
+  width: 250px;
+  height: 200px;
+  display: flex;
+}
+#result-wrapper #result-header .rankSlot .rankImg {
   width: 100px;
   height: 200px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
-#result-wrapper #result-header #rank img {
+#result-wrapper #result-header .rankSlot .rankImg img {
   width: 100px;
   height: 100px;
 }
-#result-wrapper #result-header #rank-info {
-  width: 200px;
+#result-wrapper #result-header .rankSlot .noRankImg {
+  width: 100px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+#result-wrapper #result-header .rankSlot .noRankImg img {
+  width: 120px;
+  height: 120px;
+}
+#result-wrapper #result-header .rankSlot .noRankImg p {
+  font-size: 0.8em;
+  font-weight: 500;
+}
+#result-wrapper #result-header .rankSlot .rank-info {
+  width: 150px;
   height: 200px;
   padding: 0 10px;
   display: flex;
@@ -65,6 +87,13 @@
   justify-content: center;
   font-size: 0.8em;
   font-weight: 500;
+}
+#result-wrapper #result-header .rankSlot .rank-info p {
+  text-align: left;
+}
+#result-wrapper #result-header .rankSlot .rank-info .tier {
+  font-size: 1.2em;
+  color: #f4c542;
 }
 #result-wrapper #match-wrapper {
   width: 100%;
@@ -148,6 +177,10 @@
   justify-content: flex-start;
   align-items: center;
   padding-left: 5px;
+  cursor: pointer;
+}
+#result-wrapper #match-wrapper .matchHistory .history-allPlayers .t1-names:hover, #result-wrapper #match-wrapper .matchHistory .history-allPlayers .t2-names:hover {
+  color: #333;
 }
 #result-wrapper #match-wrapper .matchHistory .history-allPlayers .history-t2 {
   height: 150px;

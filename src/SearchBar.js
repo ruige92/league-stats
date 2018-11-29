@@ -8,26 +8,41 @@ class SearchBar extends React.Component{
   constructor(props){
     super(props)
     this.state=({
-      apiKey:'RGAPI-55035d35-3f82-4c8d-b855-01b7d3528bcc',
+      firstSearch:true,
+      apiKey:'RGAPI-8f00c8c3-3b2e-406c-a98f-4c2d787f38e4',
       region:'',
       currentAccount:{
         sumId:'',
         id:'',
         name:'',
         level:'',
-        icon:'',
-        rank:'',
-        tier:'',
-        leagueName:'',
-        leaguePoints:'',
-        wins:'',
-        losses:'',
-        rankType:''
+        icon:''
       },
       error:'',
       match:false,
       matches:[],
-      gameType:[]
+      gameType:[],
+      soloRank:'',
+      soloTier:'',
+      soloLeagueName:'',
+      soloLeaguePoints:'',
+      soloWins:'',
+      soloLosses:'',
+      soloRankType:'',
+      flex5Rank:'',
+      flex5Tier:'',
+      flex5LeagueName:'',
+      flex5LeaguePoints:'',
+      flex5Wins:'',
+      flex5Losses:'',
+      flex5RankType:'',
+      flex3Rank:'',
+      flex3Tier:'',
+      flex3LeagueName:'',
+      flex3LeaguePoints:'',
+      flex3Wins:'',
+      flex3Losses:'',
+      flex3RankType:''
     })
   }
 
@@ -103,31 +118,55 @@ class SearchBar extends React.Component{
   // }
 
   navSearchBar=()=>{
-    if(this.state.match){
-      $('#result-wrapper').fadeIn(2500);
+      $('#SearchBar').fadeIn(1000);
+      // $('#result-content').fadeIn(2000);
       $('#SearchBar').addClass('navSearch');
-    }else{
-      $('#SearchBar').delay(1500).fadeIn(2000);
-    }
+      this.setState({
+        firstSearch:false
+      })
+      if(!this.state.firstSearch){
+        $('#SearchBar').fadeIn(1000);
+        $('#result-content').fadeIn(500);
+      }
   }
 
   newSearch=()=>{
-    if(this.state.match){
-      $('#result-wrapper').fadeOut(50);
+    // if((this.state.match)){
+    //   $('#result-wrapper').fadeOut(50);
+    // }else{
+    //   $('#SearchBar').fadeOut(50);
+    // }
+    if(this.state.firstSearch){
+      $('#SearchBar').fadeOut(50);
     }else{
       $('#SearchBar').fadeOut(50);
+      $('#result-content').fadeOut(50);
     }
+    // $('#SearchBar').addClass('navSearch');
     this.getSummoner();
   }
 
+  getSearchName=(name)=>{
+    document.querySelector('#sumName').value = name;
+    $('#result-content').fadeOut(100);
+    this.getSummoner();
+    console.log(name);
+  }
+
   getSummoner=()=>{
+    let results='';
+    if(this.state.region==='euw1'){
+      const query = document.querySelector('#sumName').value;
+      results = fetchSummoner("test", this.state.region, query, this.state.apiKey);
+    }else{
     const query = document.querySelector('#sumName').value;
     const region = document.querySelector('#sumRegion');
     const sumRegion = region.options[region.selectedIndex].value;
     this.setState({
       region:sumRegion
     })
-    const results = fetchSummoner("test", sumRegion, query, this.state.apiKey);
+    results = fetchSummoner("test", sumRegion, query, this.state.apiKey);
+    }
     results.then(res=>{
       // console.log(res)
       this.setState({
@@ -151,35 +190,118 @@ class SearchBar extends React.Component{
         error:'Summoner Not Found, please try another name!',
         match:false
       })
+      $('#SearchBar').removeClass('navSearch');
+      $('#SearchBar').fadeIn(100);
     });
   }
 
   getRankDetail=()=>{
     const results = fetchRankDetail("test", this.state.region, this.state.currentAccount['sumId'], this.state.apiKey);
     results.then(res=>{
-      // console.log(res[0])
-      this.setState({
-        rank:res[0]['rank'],
-        tier:res[0]['tier'],
-        leagueName:res[0]['leagueName'],
-        leaguePoints:res[0]['leaguePoints'],
-        wins:res[0]['wins'],
-        losses:res[0]['losses'],
-        rankType:res[0]['queueType']
-      })
+      console.log(res)
+      //Reset rank stats before fetching new ones
+      if(res.length === 0){
+        this.setState({
+          soloRank:'',
+          soloTier:'UNRANKED',
+          soloLeagueName:'',
+          soloLeaguePoints:0,
+          soloWins:0,
+          soloLosses:0,
+          soloRankType:'',
+          flex5Rank:'',
+          flex5Tier:'',
+          flex5LeagueName:'',
+          flex5LeaguePoints:'',
+          flex5Wins:'',
+          flex5Losses:'',
+          flex5RankType:'',
+          flex3Rank:'',
+          flex3Tier:'',
+          flex3LeagueName:'',
+          flex3LeaguePoints:'',
+          flex3Wins:'',
+          flex3Losses:'',
+          flex3RankType:'',
+          soloRankFound:false,
+          flex5RankFound:false,
+          flex3RankFound:false
+        })
+      }else{
+        this.setState({
+          soloRankFound:false,
+          flex5RankFound:false,
+          flex3RankFound:false
+        })
+      }
+      //if any rank type found, then set soloRankFound state to true, so Result page can display it.
+      // for(let i=0;i<res.length;i++){
+      //   if(res[i]['queueType'].includes('RANKED_SOLO_5x5')){
+      //     this.setState({
+      //       soloRankFound:true
+      //     })
+      //   }else if(res[i]['queueType'].includes('RANKED_FLEX_SR')){
+      //     this.setState({
+      //       flex5RankFound:true
+      //     })
+      //   }else if(res[i]['queueType'].includes('RANKED_FLEX_TT')){
+      //     this.setState({
+      //       flex3RankFound:true
+      //     })
+      //   }
+      // }
+      //fetch all
+      for(let i=0;i<res.length;i++){
+        if(res[i]['queueType']==="RANKED_SOLO_5x5"){
+          this.setState({
+            soloRank:res[i]['rank'],
+            soloTier:res[i]['tier'],
+            soloLeagueName:res[i]['leagueName'],
+            soloLeaguePoints:res[i]['leaguePoints'],
+            soloWins:res[i]['wins'],
+            soloLosses:res[i]['losses'],
+            soloRankType:res[i]['queueType'],
+            soloRankFound:true
+          })
+        }else if(res[i]['queueType']==="RANKED_FLEX_SR"){
+          this.setState({
+            flex5Rank:res[i]['rank'],
+            flex5Tier:res[i]['tier'],
+            flex5LeagueName:res[i]['leagueName'],
+            flex5LeaguePoints:res[i]['leaguePoints'],
+            flex5Wins:res[i]['wins'],
+            flex5Losses:res[i]['losses'],
+            flex5RankType:res[i]['queueType'],
+            flex5RankFound:true
+          })
+        }else if(res[i]['queueType']==="RANKED_FLEX_TT"){
+          this.setState({
+            flex3Rank:res[i]['rank'],
+            flex3Tier:res[i]['tier'],
+            flex3LeagueName:res[i]['leagueName'],
+            flex3LeaguePoints:res[i]['leaguePoints'],
+            flex3Wins:res[i]['wins'],
+            flex3Losses:res[i]['losses'],
+            flex3RankType:res[i]['queueType'],
+            flex3RankFound:true
+          })
+        }
+      }
+
       // console.log(this.state.currentAccount);
       //Have to call this method during this promise
     }).catch(err=>{
       console.log(err)
       this.setState({
-        rank:'',
-        tier:'UNRANKED',
-        leagueName:'',
-        leaguePoints:0,
-        wins:0,
-        losses:0,
-        rankType:''
+        soloRank:'',
+        soloTier:'UNRANKED',
+        soloLeagueName:'',
+        soloLeaguePoints:0,
+        soloWins:0,
+        soloLosses:0,
+        soloRankType:''
       })
+      $('#SearchBar').fadeIn(100);
     });
   }
 
@@ -187,7 +309,7 @@ class SearchBar extends React.Component{
     const results = fetchMatch("test", this.state.region, this.state.currentAccount['id'], this.state.apiKey);
     results.then(res=>{
       let arr = [];
-      for(let i=0;i<10;i++){
+      for(let i=0;i<5;i++){
         arr.push(res['matches'][i]);
       }
       this.setState({
@@ -197,6 +319,11 @@ class SearchBar extends React.Component{
       this.getMatchDetails3();
     }).catch(err=>{
       console.log(err)
+      this.setState({
+        error:'No recent data for this summoner',
+        match:false
+      })
+      $('#SearchBar').fadeIn(100);
     });
   }
 
@@ -209,7 +336,7 @@ class SearchBar extends React.Component{
     let results=[];
     //copy state of matches
     let matches2 = [...this.state.matches];
-    for(let i = 0; i<10;i++){
+    for(let i = 0; i<5;i++){
       results[i] = fetchMatchDetails("test", this.state.region, gameIds[i], this.state.apiKey)
       results[i].then(res=>{
         // console.log(res)
@@ -348,9 +475,14 @@ class SearchBar extends React.Component{
         // console.log(this.state.matches[0].playerChampions)
         // console.log(Array.isArray(this.state.matches[0].playerChampions))
         // console.log(this.state.matches)
-
+        this.navSearchBar();
       }).catch(err=>{
         console.log(err)
+        this.setState({
+          error:'No recent data for this summoner',
+          match:false
+        })
+        $('#SearchBar').fadeIn(100);
       });
     }
   }
@@ -424,45 +556,107 @@ class SearchBar extends React.Component{
   //   console.log(this.state.matchDetails[0]);
   // }
 
+
+  setRegion=(event)=>{
+    this.setState({
+      region:event.target.value
+    }, () => {
+      // $('#sumRegion').attr('value',this.state.region)
+      console.log(this.state.region)
+    })
+  }
+
   render(){
     const searchBar = (
+      <div id="result-content">
       <div id="SearchBar">
         <p id="error">{this.state.error}</p>
-        <select id="sumRegion">
-          <option value="na1">North America</option>
+        <select id="sumRegion" onChange={this.setRegion}>
           <option value="euw1">EU West</option>
           <option value="eun1">EU Nordic & East</option>
+          <option value="na1">North America</option>
         </select>
         <input id="sumName" type="text" placeholder="Summoner Name"/>
         <button id="submit" onClick={this.newSearch}>Search</button>
       </div>
-    )
+      <div id="SearchResult">
+        <Result
+        name={this.state.currentAccount['name']}
+        level={this.state.currentAccount['level']}
+        icon={this.state.currentAccount['icon']}
+        matches={this.state.matches}
+        gameType={this.state.gameType}
+        soloRank={this.state.soloRank}
+        soloTier={this.state.soloTier}
+        soloLeagueName={this.state.soloLeagueName}
+        soloLeaguePoints={this.state.soloLeaguePoints}
+        soloWins={this.state.soloWins}
+        soloLosses={this.state.soloLosses}
+        soloRankType={this.state.soloRankType}
+        flex5Rank={this.state.flex5Rank}
+        flex5Tier={this.state.flex5Tier}
+        flex5LeagueName={this.state.flex5LeagueName}
+        flex5LeaguePoints={this.state.flex5LeaguePoints}
+        flex5Wins={this.state.flex5Wins}
+        flex5Losses={this.state.flex5Losses}
+        flex5RankType={this.state.flex5RankType}
+        flex3Rank={this.state.flex3Rank}
+        flex3Tier={this.state.flex3Tier}
+        flex3LeagueName={this.state.flex3LeagueName}
+        flex3LeaguePoints={this.state.flex3LeaguePoints}
+        flex3Wins={this.state.flex3Wins}
+        flex3Losses={this.state.flex3Losses}
+        flex3RankType={this.state.flex3RankType}
+        getSearchName={this.getSearchName}
+        soloRankFound={this.state.soloRankFound}
+        flex5RankFound={this.state.flex5RankFound}
+        flex3RankFound={this.state.flex3RankFound}
+        />
+      </div>
 
-    const resultPage = (
-      <div id="wrapper">
-      {searchBar}
-      <Result
-      name={this.state.currentAccount['name']}
-      level={this.state.currentAccount['level']}
-      icon={this.state.currentAccount['icon']}
-      matches={this.state.matches}
-      gameType={this.state.gameType}
-      rank={this.state.rank}
-      tier={this.state.tier}
-      leagueName={this.state.leagueName}
-      leaguePoints={this.state.leaguePoints}
-      wins={this.state.wins}
-      losses={this.state.losses}
-      rankType={this.state.rankType}
-      />
-      {this.navSearchBar()}
       </div>
     )
 
+    const onlySearch=(
+
+      <div id="SearchBar">
+        <p id="error">{this.state.error}</p>
+        <select id="sumRegion" onChange={this.setRegion}>
+          <option value="euw1">EU West</option>
+          <option value="eun1">EU Nordic & East</option>
+          <option value="na1">North America</option>
+        </select>
+        <input id="sumName" type="text" placeholder="Summoner Name"/>
+        <button id="submit" onClick={this.newSearch}>Search</button>
+      </div>
+
+    )
+
+    // const resultPage = (
+    //   <div id="wrapper">
+    //   <Result
+    //   name={this.state.currentAccount['name']}
+    //   level={this.state.currentAccount['level']}
+    //   icon={this.state.currentAccount['icon']}
+    //   matches={this.state.matches}
+    //   gameType={this.state.gameType}
+    //   rank={this.state.rank}
+    //   tier={this.state.tier}
+    //   leagueName={this.state.leagueName}
+    //   leaguePoints={this.state.leaguePoints}
+    //   wins={this.state.wins}
+    //   losses={this.state.losses}
+    //   rankType={this.state.rankType}
+    //   getSearchName={this.getSearchName}
+    //   />
+    //   {this.navSearchBar()}
+    //   </div>
+    // )
+
 
     return(
-      <div id="wrapper">
-      {this.state.match? resultPage:searchBar}
+      <div id="main-wrapper">
+        {this.state.match? searchBar:onlySearch}
       </div>
     )
 
