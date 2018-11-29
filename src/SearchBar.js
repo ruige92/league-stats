@@ -150,7 +150,7 @@ class SearchBar extends React.Component{
     document.querySelector('#sumName').value = name;
     $('#result-content').fadeOut(100);
     this.getSummoner();
-    console.log(name);
+    // console.log(name);
   }
 
   getSummoner=()=>{
@@ -198,7 +198,7 @@ class SearchBar extends React.Component{
   getRankDetail=()=>{
     const results = fetchRankDetail("test", this.state.region, this.state.currentAccount['sumId'], this.state.apiKey);
     results.then(res=>{
-      console.log(res)
+      // console.log(res)
       //Reset rank stats before fetching new ones
       if(res.length === 0){
         this.setState({
@@ -561,8 +561,7 @@ class SearchBar extends React.Component{
     this.setState({
       region:event.target.value
     }, () => {
-      // $('#sumRegion').attr('value',this.state.region)
-      console.log(this.state.region)
+      // console.log(this.state.region)
     })
   }
 
