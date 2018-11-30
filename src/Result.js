@@ -214,7 +214,7 @@ class Result extends React.Component{
     }else if(id===420){
       return "Ranked Solo"
     }else if(id===430){
-      return "Normal 5:5"
+      return "Normal"
     }else if(id===440){
       return "Flex 5:5"
     }else if(id===460){
@@ -238,6 +238,90 @@ class Result extends React.Component{
   sendSearchName=(name)=>{
     this.props.getSearchName(name);
   }
+
+  gameTime=(time)=> {
+    let minutes = Math.floor(time/60);
+    let seconds = time-minutes*60;
+
+    return minutes+"m "+seconds+"s";
+  }
+
+  calculateCs=(timeStamp, minions, jungle)=>{
+    let totalCs = minions + jungle;
+    let minutes = Math.floor(timeStamp/60000);
+    let csPercent = totalCs/minutes;
+    let roundedPercent = Math.round(csPercent*10)/10;
+    return roundedPercent;
+  }
+
+  timeDifference=(previous)=> {
+    let current= new Date();
+    let msPerMinute = 60 * 1000;
+    let msPerHour = msPerMinute * 60;
+    let msPerDay = msPerHour * 24;
+    let msPerMonth = msPerDay * 30;
+    let msPerYear = msPerDay * 365;
+    let elapsed = current - previous;
+
+   if (elapsed < msPerMinute) {
+      let res = Math.round(elapsed/1000);
+      if(res === 1){
+        return Math.round(elapsed/1000) + ' second ago';
+      }else{
+        return Math.round(elapsed/1000) + ' seconds ago';
+      }
+    }
+
+    else if (elapsed < msPerHour) {
+      let res = Math.round(elapsed/msPerMinute);
+      if(res === 1){
+        return Math.round(elapsed/msPerMinute) + ' minute ago';
+      }else{
+        return Math.round(elapsed/msPerMinute) + ' minutes ago';
+      }
+    }
+
+    else if (elapsed < msPerDay ) {
+      let res = Math.round(elapsed/msPerHour)
+      if(res === 1){
+        return Math.round(elapsed/msPerHour ) + ' hour ago';
+      }else{
+        return Math.round(elapsed/msPerHour ) + ' hours ago';
+      }
+
+    }
+
+    else if (elapsed < msPerMonth) {
+      let res = Math.round(elapsed/msPerDay)
+      if (res === 1){
+        return Math.round(elapsed/msPerDay) + ' day ago';
+      }else{
+        return Math.round(elapsed/msPerDay) + ' days ago';
+      }
+
+    }
+
+    else if (elapsed < msPerYear) {
+      let res = Math.round(elapsed/msPerMonth);
+      if(res === 1){
+        return Math.round(elapsed/msPerMonth) + ' month ago';
+      }else{
+        return Math.round(elapsed/msPerMonth) + ' months ago';
+      }
+
+    }
+
+    else {
+      let res = Math.round(elapsed/msPerYear );
+      if(res === 1){
+        return Math.round(elapsed/msPerYear ) + ' year ago';
+      }else{
+        return Math.round(elapsed/msPerYear ) + ' years ago';
+      }
+
+    }
+}
+
 
   render(){
     const flex5Rank=(
@@ -312,12 +396,14 @@ class Result extends React.Component{
         </div>
         <div id="match-wrapper">
           {this.props.matches.map((i,key)=>(
-            <div className={`matchHistory ${i.finalResult}`} id={'match_'+i} key={key}>
+            <div className={i.gameDuration<240 ? `badmatchHistory matchHistory ${i.finalResult}` : `matchHistory ${i.finalResult}`} id={'match_'+i} key={key}>
               <div className="history-header">
                 <p className="result">{this.queueType(i.queueType)}</p>
-                <p className="result">Season {i.season}</p>
-                <p className="result">{i.lane}</p>
-                <p className="result"> {this.finalResult(i.finalResult)} </p>
+                <p className="result" >{this.timeDifference(i.timeStamp)}</p>
+                <div className="divideLine"></div>
+                {i.gameDuration<240 ? <p className="result"> Remake </p> : <p className={`result ${ this.finalResult(i.finalResult) }`}> {this.finalResult(i.finalResult)} </p>}
+                
+                <p className="result" id="gameTime">{this.gameTime(i.gameDuration)}</p>
               </div>
               <div className="history-left">
                 <img src={this.champIcon(i.champion)} alt={i.champion}/>
@@ -330,6 +416,9 @@ class Result extends React.Component{
               <div className="history-mid">
                 <p className="kda">{i.kills}/<span className="red">{i.deaths}</span>/{i.assists}</p>
                 <p>Level {i.champLevel}</p>
+                <p className="csStat">{i.endGameMinionKills} Minion CS</p>
+                <p className="csStat">{i.endGameJungleKills} Jungle CS</p>
+                <p className="csStat csNum"> {this.calculateCs(i.endGameTime, i.endGameMinionKills, i.endGameJungleKills)} CS/Minute </p>
               </div>
               <div className="history-right">
                 {i.item0===0? null:<img src={this.itemIcon(i.item0)} alt={i.item0} />}
@@ -338,7 +427,6 @@ class Result extends React.Component{
                 {i.item3===0? null:<img src={this.itemIcon(i.item3)} alt={i.item3} />}
                 {i.item4===0? null:<img src={this.itemIcon(i.item4)} alt={i.item4} />}
                 {i.item5===0? null:<img src={this.itemIcon(i.item5)} alt={i.item5} />}
-
               </div>
               <div className="history-allPlayers">
                 <div className="history">

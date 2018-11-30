@@ -51,6 +51,7 @@ export const fetchMatch=(url, region, accountId, apiKey)=>{
       });
   }
 }
+
 export const fetchRankDetail=(url, region, sumId, apiKey)=>{
   const endpoint="https://"+region+".api.riotgames.com/lol/league/v4/positions/by-summoner/"+sumId+"?api_key="+apiKey;
   if (url) {
@@ -60,6 +61,24 @@ export const fetchRankDetail=(url, region, sumId, apiKey)=>{
           return response.json();
         }else{
           throw new Error('fetchRankDetail failed');
+        }
+      }).then(result=> {
+          return result;
+      }).catch(error => {
+          console.log(error)
+      });
+  }
+}
+
+export const fetchTimeLine=(url, region, query, apiKey)=>{
+  const endpoint="https://"+region+".api.riotgames.com/lol/match/v4/timelines/by-match/"+query+"?api_key="+apiKey;
+  if (url) {
+    return fetch(endpoint)
+      .then(response=> {
+        if(response.status === 200 && response.ok){
+          return response.json();
+        }else{
+          throw new Error('fetchTimeLine failed');
         }
       }).then(result=> {
           return result;

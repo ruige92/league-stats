@@ -2,14 +2,16 @@ import React from 'react';
 import './SearchBar.css';
 import $ from 'jquery';
 import Result from './Result';
-import { fetchMatchDetails, fetchSummoner, fetchMatch , fetchRankDetail } from './Fetcher.js';
+import { fetchMatchDetails, fetchSummoner, fetchMatch , fetchRankDetail , fetchTimeLine } from './Fetcher.js';
 
 class SearchBar extends React.Component{
   constructor(props){
     super(props)
     this.state=({
+      numOfSearch:8,
+      originalNumOfSearch:8,
       firstSearch:true,
-      apiKey:'RGAPI-8f00c8c3-3b2e-406c-a98f-4c2d787f38e4',
+      apiKey:'RGAPI-c9fcfee7-0200-4486-9f34-8b15406f4861',
       region:'',
       currentAccount:{
         sumId:'',
@@ -307,8 +309,22 @@ class SearchBar extends React.Component{
     const results = fetchMatch("test", this.state.region, this.state.currentAccount['id'], this.state.apiKey);
     results.then(res=>{
       // console.log(res);
+
+      if(res['matches'].length < this.state.numOfSearch){
+        this.setState({
+          numOfSearch:res['matches'].length
+        })
+      }else{
+        this.setState({
+          numOfSearch:this.state.originalNumOfSearch
+        })
+      }
+      // console.log(this.state.numOfSearch);
       let arr = [];
-      for(let i=0;i<6;i++){
+      for(let i=0;i<this.state.numOfSearch;i++){
+        // if(res['matches'][i]===undefined){
+        //   continue;
+        // }
         arr.push(res['matches'][i]);
       }
       this.setState({
@@ -316,6 +332,7 @@ class SearchBar extends React.Component{
       })
       //Have to call method here;
       this.getMatchDetails3();
+      this.getTimeline();
     }).catch(err=>{
       console.log(err)
       this.setState({
@@ -337,13 +354,25 @@ class SearchBar extends React.Component{
     let results=[];
     //copy state of matches
     let matches2 = [...this.state.matches];
-    for(let i = 0; i<6;i++){
+    for(let i = 0; i<this.state.numOfSearch;i++){
       results[i] = fetchMatchDetails("test", this.state.region, gameIds[i], this.state.apiKey)
       results[i].then(res=>{
         // console.log(res)
+        if((res['gameMode']==="TUTORIAL_MODULE_3") || (res['gameMode']==="TUTORIAL_MODULE_2") || (res['gameMode']==="TUTORIAL_MODULE_1")){
+          this.setState({
+            error:'No recent data for this summoner',
+            match:false
+          })
+          $('#SearchBar').removeClass('navSearch');
+          $('#SearchBar').fadeIn(100);
+          $('#result-content').fadeIn(100);
+          return;
+        }
         //add each gameMode into the matches state
         matches2[i].gameMode=res['gameMode'];
         matches2[i].queueType=res['queueId'];
+        matches2[i].timeStamp=res['gameCreation'];
+        matches2[i].gameDuration=res['gameDuration'];
         // console.log('playerId: '+this.state.currentAccount['id']);
         const playerId = this.state.currentAccount['id'];
         // console.log("id: "+playerId)
@@ -385,6 +414,7 @@ class SearchBar extends React.Component{
             item4=res['participants'][i]['stats']['item4'];
             item5=res['participants'][i]['stats']['item5'];
             item6=res['participants'][i]['stats']['item6'];
+
             // console.log(currentParticipantNum);
             // console.log(res['participants'][i]['stats']['item0'])
             if (currentParticipantNum === res['participants'][i]['participantId']){
@@ -422,7 +452,7 @@ class SearchBar extends React.Component{
             // console.log(matchResult);
           }
         }
-
+        matches2[i].currentParticipantNum=currentParticipantNum;
         //For Twisted Treeline ONLY, where there's only 6 participants
         //Values for 6 players champion ids
         matches2[i].tt2Champ0=t2[5];
@@ -501,6 +531,43 @@ class SearchBar extends React.Component{
         // console.log(this.state.matches)
         // console.log(this.state.matches);
         this.navSearchBar();
+        // console.log(this.state.matches[0]['gameId'])
+        // console.log(this.state.matches[1]['gameId'])
+        // console.log(this.state.region)
+
+      }).catch(err=>{
+        console.log(err)
+        this.setState({
+          error:'No recent data for this summoner',
+          match:false
+        })
+        $('#SearchBar').removeClass('navSearch');
+        $('#SearchBar').fadeIn(100);
+        $('#result-content').fadeIn(100);
+      });
+    }
+  }
+
+  getTimeline=()=>{
+    let matches2 = [...this.state.matches];
+    let results=[];
+    for(let i = 0; i<this.state.numOfSearch;i++){
+      results[i] = fetchTimeLine("test", this.state.region, this.state.matches[i]['gameId'], this.state.apiKey)
+      results[i].then(res=>{
+
+        const index = (res['frames'].length)-1;
+        // console.log(res['frames'][index]['timestamp']);
+        // console.log(res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]);
+        // console.log(res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]['minionsKilled']);
+        // console.log(res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]['jungleMinionsKilled']);
+
+        matches2[i].endGameTime=res['frames'][index]['timestamp'];
+        matches2[i].endGameMinionKills=res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]['minionsKilled'];
+        matches2[i].endGameJungleKills=res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]['jungleMinionsKilled'];
+        this.setState({
+          matches:matches2
+        })
+
       }).catch(err=>{
         console.log(err)
         this.setState({
