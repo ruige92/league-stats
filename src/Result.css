@@ -4,7 +4,7 @@
 }
 
 #result-wrapper {
-  width: 80%;
+  width: 90%;
   height: 100vh;
   margin-top: 80px;
 }
@@ -171,6 +171,7 @@
 }
 #result-wrapper #match-wrapper .matchHistory .history-mid .kda {
   font-weight: 500;
+  font-size: 1.5em;
 }
 #result-wrapper #match-wrapper .matchHistory .history-mid .kda .red {
   color: #e2144a;

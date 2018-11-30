@@ -254,6 +254,10 @@ class Result extends React.Component{
     return roundedPercent;
   }
 
+  totalCs=(minion, jungle)=>{
+    return minion+jungle;
+  }
+
   timeDifference=(previous)=> {
     let current= new Date();
     let msPerMinute = 60 * 1000;
@@ -320,8 +324,12 @@ class Result extends React.Component{
       }
 
     }
-}
+  }
 
+  calculateKDA=(kill, death, assist)=>{
+    let kda = (kill+assist)/death;
+    return Math.round(kda*10)/10;
+  }
 
   render(){
     const flex5Rank=(
@@ -402,7 +410,7 @@ class Result extends React.Component{
                 <p className="result" >{this.timeDifference(i.timeStamp)}</p>
                 <div className="divideLine"></div>
                 {i.gameDuration<240 ? <p className="result"> Remake </p> : <p className={`result ${ this.finalResult(i.finalResult) }`}> {this.finalResult(i.finalResult)} </p>}
-                
+
                 <p className="result" id="gameTime">{this.gameTime(i.gameDuration)}</p>
               </div>
               <div className="history-left">
@@ -415,9 +423,11 @@ class Result extends React.Component{
               </div>
               <div className="history-mid">
                 <p className="kda">{i.kills}/<span className="red">{i.deaths}</span>/{i.assists}</p>
-                <p>Level {i.champLevel}</p>
-                <p className="csStat">{i.endGameMinionKills} Minion CS</p>
-                <p className="csStat">{i.endGameJungleKills} Jungle CS</p>
+                <p className="csStat csNum">{this.calculateKDA(i.kills,i.deaths,i.assists)} KDA</p>
+              </div>
+              <div className="history-mid">
+                <p className="csStat">LV {i.champLevel}</p>
+                <p className="csStat">{this.totalCs(i.endGameMinionKills,i.endGameJungleKills)} CS</p>
                 <p className="csStat csNum"> {this.calculateCs(i.endGameTime, i.endGameMinionKills, i.endGameJungleKills)} CS/Minute </p>
               </div>
               <div className="history-right">

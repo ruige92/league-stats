@@ -196,7 +196,7 @@ class SearchBar extends React.Component{
   getRankDetail=()=>{
     const results = fetchRankDetail("test", this.state.region, this.state.currentAccount['sumId'], this.state.apiKey);
     results.then(res=>{
-      // console.log(res)
+      console.log(res)
       //Reset rank stats before fetching new ones
       if(res.length === 0){
         this.setState({
