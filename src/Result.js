@@ -142,15 +142,13 @@ class Result extends React.Component{
     return itemImgName = itemImgName.join("");
   }
   //
-  // filterEmptyItemIcon2=()=>{
-  //   const imgs = $('.history-right img')
-  //   // console.log(imgs);
-  //   for (let i=0;i<imgs.length;i++){
-  //     if((imgs[i].getAttribute('alt')==="0")||(imgs[i].getAttribute('alt')==="1018")||(imgs[i].getAttribute('alt')==="2301")){
-  //       imgs[i].remove();
-  //     }
-  //   }
-  // }
+  filterEmptyItemIcon=(id)=>{
+    if((id===0)||(id===1018)||(id===2301)||(id===2302)){
+      return false;
+    }else{
+      return true;
+    }
+  }
 
   resetNameFields=()=>{
     $('.t1-names').css({'font-weight':'400'});
@@ -229,6 +227,8 @@ class Result extends React.Component{
       return "Bot"
     }else if(id===700){
       return "Clash"
+    }else if(id===33){
+      return "Bot"
     }
   }
 
@@ -433,18 +433,12 @@ class Result extends React.Component{
               <p className="csStat csNum"> {this.calculateCs(i.endGameTime, i.endGameMinionKills, i.endGameJungleKills)} CS/Minute </p>
             </div>
             <div className="history-right">
-              {i.item0===0? null:<div className="itemWrapper"><img src={this.itemIcon(i.item0)} alt={i.item0} /></div>}
-
-              {i.item1===0? null:<div className="itemWrapper"><img src={this.itemIcon(i.item1)} alt={i.item1} /></div>}
-
-              {i.item2===0? null:<div className="itemWrapper"><img src={this.itemIcon(i.item2)} alt={i.item2} /></div>}
-
-              {i.item3===0? null:<div className="itemWrapper"><img src={this.itemIcon(i.item3)} alt={i.item3} /></div>}
-
-              {i.item4===0? null:<div className="itemWrapper"><img src={this.itemIcon(i.item4)} alt={i.item4} /></div>}
-
-              {i.item5===0? null:<div className="itemWrapper"><img src={this.itemIcon(i.item5)} alt={i.item5} /></div>}
-
+              {this.filterEmptyItemIcon(i.item0) ? <div className="itemWrapper"><img src={this.itemIcon(i.item0)} alt={i.item0} /></div> :null}
+              {this.filterEmptyItemIcon(i.item1) ? <div className="itemWrapper"><img src={this.itemIcon(i.item1)} alt={i.item1} /></div> :null}
+              {this.filterEmptyItemIcon(i.item2) ? <div className="itemWrapper"><img src={this.itemIcon(i.item2)} alt={i.item2} /></div> :null}
+              {this.filterEmptyItemIcon(i.item3) ? <div className="itemWrapper"><img src={this.itemIcon(i.item3)} alt={i.item3} /></div> :null}
+              {this.filterEmptyItemIcon(i.item4) ? <div className="itemWrapper"><img src={this.itemIcon(i.item4)} alt={i.item4} /></div> :null}
+              {this.filterEmptyItemIcon(i.item5) ? <div className="itemWrapper"><img src={this.itemIcon(i.item5)} alt={i.item5} /></div> :null}
             </div>
             <div className="history-allPlayers">
               <div className="history">

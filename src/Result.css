@@ -105,13 +105,6 @@
   display: flex;
   flex-direction: column;
 }
-#result-wrapper #match-wrapper .badmatchHistory {
-  background: #ccc !important;
-  border: 1px solid #aaa !important;
-}
-#result-wrapper #match-wrapper .badmatchHistory .Victory, #result-wrapper #match-wrapper .badmatchHistory .Defeat {
-  color: #000 !important;
-}
 #result-wrapper #match-wrapper .Win {
   background: #b5d8ff;
 }
@@ -125,6 +118,13 @@
 #result-wrapper #match-wrapper .Fail .history-header {
   background: #d19a9a !important;
   color: #725353 !important;
+}
+#result-wrapper #match-wrapper .badmatchHistory {
+  background: #ccc !important;
+}
+#result-wrapper #match-wrapper .badmatchHistory .history-header {
+  background: #8f939b !important;
+  color: #37393d !important;
 }
 #result-wrapper #match-wrapper .matchHistory {
   border-radius: 5px;

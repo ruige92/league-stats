@@ -374,7 +374,7 @@ class SearchBar extends React.Component{
       this.setState({
         matches:arr
       })
-      // console.log(this.state.matches)
+      console.log(this.state.matches)
       //Have to call method here;
       this.getMatchDetails3();
       this.getTimeline();
@@ -405,7 +405,7 @@ class SearchBar extends React.Component{
     for(let i = this.state.searchIndex; i<this.state.numOfSearch;i++){
       results = fetchMatchDetails("test", this.state.region, gameIds[i], this.state.apiKey)
       results.then(res=>{
-        // console.log(res)
+        console.log(res)
         if((res['gameMode']==="TUTORIAL_MODULE_3") || (res['gameMode']==="TUTORIAL_MODULE_2") || (res['gameMode']==="TUTORIAL_MODULE_1")){
           this.setState({
             error:'No recent data for this summoner',
@@ -581,21 +581,39 @@ class SearchBar extends React.Component{
 
         const index = (res['frames'].length)-1;
 
-        // console.log(res['frames'][index]['timestamp']);
-        // console.log('partNum: '+this.state.matches[i]['currentParticipantNum']);
-        // console.log(res['frames'][index]);
-        // console.log(res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]);
-        // console.log(res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]['minionsKilled']);
-        // console.log(res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]['jungleMinionsKilled']);
+        //save current participant number locally, attempt to fix the 'minionsKilled' undefined bug
+        let participants=[];
+        for(let i = 0; i < matches2.length; i++){
+          if(participants.includes(undefined)){
+            // if(matches2[i]['currentParticipantNum']===undefined){
+              for(let i = 0; i < matches2.length; i++){
+                participants[i]=matches2[i]['currentParticipantNum'];
+              }
+            // }
+          }
+          participants[i]=matches2[i]['currentParticipantNum'];
+        }
 
-        matches2[i].endGameTime=res['frames'][index]['timestamp'];
-        matches2[i].endGameMinionKills=res['frames'][index]['participantFrames'][matches2[i]['currentParticipantNum']]['minionsKilled'];
-        matches2[i].endGameJungleKills=res['frames'][index]['participantFrames'][matches2[i]['currentParticipantNum']]['jungleMinionsKilled'];
-        matches2[i].endGameGold=res['frames'][index]['participantFrames'][matches2[i]['currentParticipantNum']]['totalGold'];
-        matches2[i].endGameXp=res['frames'][index]['participantFrames'][matches2[i]['currentParticipantNum']]['xp'];
-        this.setState({
-          matches:matches2
-        })
+        if(participants.includes(undefined)===false){
+          // console.log(matches2[0]['currentParticipantNum']);
+          // console.log(matches2[1]['currentParticipantNum']);
+          // console.log(matches2[2]['currentParticipantNum']);
+          console.log(participants);
+          // console.log('partNum: '+matches2[i]['currentParticipantNum']);
+          // console.log(res['frames'][index]);
+          // console.log(res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]);
+          // console.log(res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]['minionsKilled']);
+          // console.log(res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]['jungleMinionsKilled']);
+
+          matches2[i].endGameTime=res['frames'][index]['timestamp'];
+          matches2[i].endGameMinionKills=res['frames'][index]['participantFrames'][participants[i]]['minionsKilled'];
+          matches2[i].endGameJungleKills=res['frames'][index]['participantFrames'][participants[i]]['jungleMinionsKilled'];
+          matches2[i].endGameGold=res['frames'][index]['participantFrames'][participants[i]]['totalGold'];
+          matches2[i].endGameXp=res['frames'][index]['participantFrames'][participants[i]]['xp'];
+          this.setState({
+            matches:matches2
+          })
+        }
 
       }).catch(err=>{
         console.log(err)
@@ -697,7 +715,7 @@ class SearchBar extends React.Component{
     this.getSummoner();
     scroll.scrollToBottom({
   duration: 1500,
-  delay: 700});
+  delay: 1500});
   }
 
   setRegion=(event)=>{

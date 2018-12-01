@@ -108,14 +108,6 @@
     // background:red;
     display:flex;
     flex-direction: column;
-    .badmatchHistory{
-      background:#ccc !important;
-      border:1px solid #aaa !important;
-
-      .Victory,.Defeat{
-        color:#000 !important;
-      }
-    }
     .Win{
       background:rgb(181, 216, 255);
       .history-header{
@@ -130,6 +122,18 @@
         color:rgb(114, 83, 83) !important;
       }
     }
+    .badmatchHistory{
+      background:#ccc !important;
+      // border:1px solid #aaa !important;
+      .history-header{
+        background:rgb(143, 147, 155) !important;
+        color:rgb(55, 57, 61)!important;
+      }
+      // .Victory,.Defeat{
+      //   color:#000 !important;
+      // }
+    }
+
     .matchHistory{
       border-radius: 5px;
       display:flex;
