@@ -3,6 +3,7 @@ import './SearchBar.css';
 import $ from 'jquery';
 import Result from './Result';
 import { fetchMatchDetails, fetchSummoner, fetchMatch , fetchRankDetail , fetchTimeLine } from './Fetcher.js';
+import { animateScroll as scroll } from 'react-scroll';
 
 class SearchBar extends React.Component{
   constructor(props){
@@ -51,6 +52,10 @@ class SearchBar extends React.Component{
   }
 
   componentDidMount(){
+
+  }
+
+  componentWillUnmount() {
 
   }
 
@@ -580,10 +585,10 @@ class SearchBar extends React.Component{
 
       }).catch(err=>{
         console.log(err)
-        // this.setState({
-        //   error:'No recent data for this summoner',
-        //   match:false
-        // })
+        this.setState({
+          error:'No recent data for this summoner',
+          match:false
+        })
         $('#SearchBar').removeClass('navSearch');
         $('#SearchBar').fadeIn(100);
         $('#result-content').fadeIn(100);
@@ -672,10 +677,13 @@ class SearchBar extends React.Component{
       searchIndex:this.state.numOfSearch,
       numOfSearch:this.state.numOfSearch+this.state.originalNumOfSearch
     })
-    console.log('after search:')
-    console.log('index: ' +this.state.searchIndex);
-    console.log('searchUntil: '+this.state.numOfSearch);
+    // console.log('after search:')
+    // console.log('index: ' +this.state.searchIndex);
+    // console.log('searchUntil: '+this.state.numOfSearch);
     this.getSummoner();
+    scroll.scrollToBottom({
+  duration: 1500,
+  delay: 700});
   }
 
   setRegion=(event)=>{
@@ -745,6 +753,7 @@ class SearchBar extends React.Component{
         />
         <span id="fetchMore" onClick={this.fetchMoreGames}> more games</span>
       </div> :null}
+      <div id="bottom" name="scroll-to-element"></div>
       </div>
     )
 
