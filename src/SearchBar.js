@@ -366,9 +366,7 @@ class SearchBar extends React.Component{
       // console.log(this.state.searchIndex)
       // console.log(this.state.numOfSearch)
       for(let i = this.state.searchIndex;i<this.state.numOfSearch;i++){
-        // if(res['matches'][i]===undefined){
-        //   continue;
-        // }
+
         arr.push(res['matches'][i]);
         // console.log(arr)
       }
@@ -574,23 +572,27 @@ class SearchBar extends React.Component{
 
   getTimeline=()=>{
     let matches2 = [...this.state.matches];
+    // console.log(matches2);
     let results=[];
     for(let i = this.state.searchIndex; i<this.state.numOfSearch;i++){
       results[i] = fetchTimeLine("test", this.state.region, this.state.matches[i]['gameId'], this.state.apiKey)
       results[i].then(res=>{
         // console.log(res);
+
         const index = (res['frames'].length)-1;
 
         // console.log(res['frames'][index]['timestamp']);
+        // console.log('partNum: '+this.state.matches[i]['currentParticipantNum']);
+        // console.log(res['frames'][index]);
         // console.log(res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]);
         // console.log(res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]['minionsKilled']);
         // console.log(res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]['jungleMinionsKilled']);
 
         matches2[i].endGameTime=res['frames'][index]['timestamp'];
-        matches2[i].endGameMinionKills=res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]['minionsKilled'];
-        matches2[i].endGameJungleKills=res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]['jungleMinionsKilled'];
-        matches2[i].endGameGold=res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]['totalGold'];
-        matches2[i].endGameXp=res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]['xp'];
+        matches2[i].endGameMinionKills=res['frames'][index]['participantFrames'][matches2[i]['currentParticipantNum']]['minionsKilled'];
+        matches2[i].endGameJungleKills=res['frames'][index]['participantFrames'][matches2[i]['currentParticipantNum']]['jungleMinionsKilled'];
+        matches2[i].endGameGold=res['frames'][index]['participantFrames'][matches2[i]['currentParticipantNum']]['totalGold'];
+        matches2[i].endGameXp=res['frames'][index]['participantFrames'][matches2[i]['currentParticipantNum']]['xp'];
         this.setState({
           matches:matches2
         })
