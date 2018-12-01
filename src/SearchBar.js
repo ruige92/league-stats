@@ -8,10 +8,10 @@ class SearchBar extends React.Component{
   constructor(props){
     super(props)
     this.state=({
-      numOfSearch:8,
-      originalNumOfSearch:8,
+      numOfSearch:3,
+      originalNumOfSearch:3,
       firstSearch:true,
-      apiKey:'RGAPI-c9fcfee7-0200-4486-9f34-8b15406f4861',
+      apiKey:'RGAPI-1512919a-a67c-471f-af30-c8eb26922e4b',
       region:'',
       currentAccount:{
         sumId:'',
@@ -44,7 +44,9 @@ class SearchBar extends React.Component{
       flex3LeaguePoints:'',
       flex3Wins:'',
       flex3Losses:'',
-      flex3RankType:''
+      flex3RankType:'',
+      moreGames:false,
+      searchIndex:0
     })
   }
 
@@ -138,6 +140,11 @@ class SearchBar extends React.Component{
     // }else{
     //   $('#SearchBar').fadeOut(50);
     // }
+    this.setState({
+      numOfSearch:this.state.originalNumOfSearch,
+      searchIndex:0,
+      moreGames:false
+    })
     if(this.state.firstSearch){
       $('#SearchBar').fadeOut(50);
     }else{
@@ -151,8 +158,13 @@ class SearchBar extends React.Component{
   getSearchName=(name)=>{
     document.querySelector('#sumName').value = name;
     $('#result-content').fadeOut(100);
+    this.setState({
+      numOfSearch:this.state.originalNumOfSearch,
+      searchIndex:0,
+      moreGames:false
+    })
     this.getSummoner();
-    // console.log(name);
+    // console.log(this.state.moreGames);
   }
 
   getSummoner=()=>{
@@ -306,30 +318,48 @@ class SearchBar extends React.Component{
   }
 
   getMatch=()=>{
+    // console.log('get match triggered!')
     const results = fetchMatch("test", this.state.region, this.state.currentAccount['id'], this.state.apiKey);
     results.then(res=>{
       // console.log(res);
+      // console.log('before search:')
+      // console.log('index: ' +this.state.searchIndex);
+      // console.log('searchUntil: '+this.state.numOfSearch);
 
       if(res['matches'].length < this.state.numOfSearch){
         this.setState({
           numOfSearch:res['matches'].length
         })
-      }else{
-        this.setState({
-          numOfSearch:this.state.originalNumOfSearch
-        })
       }
+      // else{
+      //   this.setState({
+      //     numOfSearch:this.state.originalNumOfSearch
+      //   })
+      // }
       // console.log(this.state.numOfSearch);
-      let arr = [];
-      for(let i=0;i<this.state.numOfSearch;i++){
+      let arr= [];
+      if(this.state.moreGames){
+        arr = [...this.state.matches];
+      }else{
+        arr=[];
+      }
+
+      // let index = this.state.searchIndex;
+      // console.log('about to push some game ids!')
+      // console.log(this.state.searchIndex)
+      // console.log(this.state.numOfSearch)
+      for(let i = this.state.searchIndex;i<this.state.numOfSearch;i++){
         // if(res['matches'][i]===undefined){
         //   continue;
         // }
         arr.push(res['matches'][i]);
+        // console.log(arr)
       }
+      // console.log('finished pushing gameids')
       this.setState({
         matches:arr
       })
+      // console.log(this.state.matches)
       //Have to call method here;
       this.getMatchDetails3();
       this.getTimeline();
@@ -350,13 +380,16 @@ class SearchBar extends React.Component{
     for(let i=0;i<this.state.matches.length;i++){
       gameIds.push(this.state.matches[i]['gameId']);
     }
+    // if(this.state.searchIndex > 0){
+    //   gameIds.pop();
+    // }
     // console.log(gameIds);
     let results=[];
     //copy state of matches
     let matches2 = [...this.state.matches];
-    for(let i = 0; i<this.state.numOfSearch;i++){
-      results[i] = fetchMatchDetails("test", this.state.region, gameIds[i], this.state.apiKey)
-      results[i].then(res=>{
+    for(let i = this.state.searchIndex; i<this.state.numOfSearch;i++){
+      results = fetchMatchDetails("test", this.state.region, gameIds[i], this.state.apiKey)
+      results.then(res=>{
         // console.log(res)
         if((res['gameMode']==="TUTORIAL_MODULE_3") || (res['gameMode']==="TUTORIAL_MODULE_2") || (res['gameMode']==="TUTORIAL_MODULE_1")){
           this.setState({
@@ -438,12 +471,6 @@ class SearchBar extends React.Component{
           }
 
         }
-        // for(let i = 0;i<res['participants'].length;i++){
-        //   if((res['participants'][i])===undefined){
-        //     continue;
-        //   }
-        //
-        // }
 
         //Search if player won the game or not
         for (let i = 0 ; i<res['teams'].length;i++){
@@ -494,18 +521,6 @@ class SearchBar extends React.Component{
         matches2[i].t2Name3=t2names[8];
         matches2[i].t2Name4=t2names[9];
 
-        //
-        // matches2[i].p20Champ=p2[0];
-        // matches2[i].p21Champ=p2[1];
-        // matches2[i].p22Champ=p2[2];
-        // matches2[i].p23Champ=p2[3];
-        // matches2[i].p24Champ=p2[4];
-        // matches2[i].p25Champ=p2[5];
-        // matches2[i].p26Champ=p2[6];
-        // matches2[i].p27Champ=p2[7];
-        // matches2[i].p28Champ=p2[8];
-        // matches2[i].p29Champ=p2[9];
-        // this.getAllPlayers(res, matches2[i]);
         //Values for currentplayer information, such as kda stats
         matches2[i].spell1=spell1;
         matches2[i].spell2=spell2;
@@ -514,14 +529,6 @@ class SearchBar extends React.Component{
         matches2[i].assists=assists;
         matches2[i].champLevel=champLevel;
         matches2[i].finalResult=matchResult;
-        //Attempt to add game champions to matches state
-        // let champsArr = [];
-        // for (let j=0;j<10;j++){
-        //   champsArr.push((res['participants'][j]['championId']).toString())
-        //   // champIcon((res['participants'][j]['championId']).toString())
-        // }
-        // matches2[i].playerChampions=champsArr;
-        //
 
         this.setState({
           matches:matches2
@@ -551,11 +558,12 @@ class SearchBar extends React.Component{
   getTimeline=()=>{
     let matches2 = [...this.state.matches];
     let results=[];
-    for(let i = 0; i<this.state.numOfSearch;i++){
+    for(let i = this.state.searchIndex; i<this.state.numOfSearch;i++){
       results[i] = fetchTimeLine("test", this.state.region, this.state.matches[i]['gameId'], this.state.apiKey)
       results[i].then(res=>{
-
+        // console.log(res);
         const index = (res['frames'].length)-1;
+
         // console.log(res['frames'][index]['timestamp']);
         // console.log(res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]);
         // console.log(res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]['minionsKilled']);
@@ -564,21 +572,30 @@ class SearchBar extends React.Component{
         matches2[i].endGameTime=res['frames'][index]['timestamp'];
         matches2[i].endGameMinionKills=res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]['minionsKilled'];
         matches2[i].endGameJungleKills=res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]['jungleMinionsKilled'];
+        matches2[i].endGameGold=res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]['totalGold'];
+        matches2[i].endGameXp=res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]['xp'];
         this.setState({
           matches:matches2
         })
 
       }).catch(err=>{
         console.log(err)
-        this.setState({
-          error:'No recent data for this summoner',
-          match:false
-        })
+        // this.setState({
+        //   error:'No recent data for this summoner',
+        //   match:false
+        // })
         $('#SearchBar').removeClass('navSearch');
         $('#SearchBar').fadeIn(100);
         $('#result-content').fadeIn(100);
       });
     }
+    // this.setState({
+    //   searchIndex:this.state.numOfSearch,
+    //   numOfSearch:this.state.numOfSearch+this.state.numOfSearch
+    // })
+    // console.log('after search:')
+    // console.log('index: ' +this.state.searchIndex);
+    // console.log('searchUntil: '+this.state.numOfSearch);
   }
 
   //Method of sending request to Riot API for Overall Matches
@@ -649,7 +666,17 @@ class SearchBar extends React.Component{
   //   }
   //   console.log(this.state.matchDetails[0]);
   // }
-
+  fetchMoreGames=()=>{
+    this.setState({
+      moreGames:true,
+      searchIndex:this.state.numOfSearch,
+      numOfSearch:this.state.numOfSearch+this.state.originalNumOfSearch
+    })
+    console.log('after search:')
+    console.log('index: ' +this.state.searchIndex);
+    console.log('searchUntil: '+this.state.numOfSearch);
+    this.getSummoner();
+  }
 
   setRegion=(event)=>{
     this.setState({
@@ -668,6 +695,14 @@ class SearchBar extends React.Component{
           <option value="euw1">EU West</option>
           <option value="eun1">EU Nordic & East</option>
           <option value="na1">North America</option>
+          <option value="br1">Brazil</option>
+          <option value="jp1">Japan</option>
+          <option value="kr">Korea</option>
+          <option value="la1">Latin America North</option>
+          <option value="la2">Latin America South</option>
+          <option value="tr1">Turkey</option>
+          <option value="oc1">Oceania</option>
+          <option value="ru">Russia</option>
         </select>
         <input id="sumName" type="text" placeholder="Summoner Name"/>
         <button id="submit" onClick={this.newSearch}>Search</button>
@@ -705,9 +740,11 @@ class SearchBar extends React.Component{
         soloRankFound={this.state.soloRankFound}
         flex5RankFound={this.state.flex5RankFound}
         flex3RankFound={this.state.flex3RankFound}
-        />
-      </div> :null}
 
+        moreGames={this.state.moreGames}
+        />
+        <span id="fetchMore" onClick={this.fetchMoreGames}> more games</span>
+      </div> :null}
       </div>
     )
 

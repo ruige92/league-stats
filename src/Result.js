@@ -331,6 +331,10 @@ class Result extends React.Component{
     return Math.round(kda*10)/10;
   }
 
+  fetchMoreGames=()=>{
+    this.props.moreGames = true;
+  }
+
   render(){
     const flex5Rank=(
       <div className="rankSlot">
@@ -387,6 +391,103 @@ class Result extends React.Component{
       </div>
     )
 
+    const resultContent=(
+      <div id="match-wrapper">
+        {this.props.matches.map((i,key)=>(
+          <div className={i.gameDuration<240 ? `badmatchHistory matchHistory ${i.finalResult}` : `matchHistory ${i.finalResult}`} id={'match_'+i} key={key}>
+            <div className="history-header">
+              <div className="history-header-left">
+                <p className="result" id="queueType">{this.queueType(i.queueType)}</p>
+                <div className="divideLine"></div>
+                <p className="result" >{this.timeDifference(i.timeStamp)}</p>
+                <div className="divideLine"></div>
+                <p className="result" id="gameTime">{this.gameTime(i.gameDuration)}</p>
+              </div>
+              <div className="history-header-right">
+                {i.gameDuration<240 ? <p className="result"> Remake </p> : <p className={`result ${ this.finalResult(i.finalResult) }`}> {this.finalResult(i.finalResult)} </p>}
+              </div>
+            </div>
+            <div className="history-body">
+            <div className="history-left">
+              <div className="sumChamp">
+                <img src={this.champIcon(i.champion)} alt={i.champion}/>
+              </div>
+              <div className="sumSpells">
+                <div className="spellWrapper">
+                <img src={this.spellIcon(i.spell1)} alt={i.spell1}/>
+                </div>
+                <div className="spellWrapper">
+                <img src={this.spellIcon(i.spell2)} alt={i.spell2}/>
+                </div>
+              </div>
+
+            </div>
+            <div className="history-mid">
+              <p className="champName">{this.champName(i.champion)}</p>
+              <p className="kda">{i.kills}/<span className="red">{i.deaths}</span>/{i.assists}</p>
+              <p className="csStat csNum">{this.calculateKDA(i.kills,i.deaths,i.assists)} KDA</p>
+            </div>
+            <div className="history-mid2">
+              <p className="csStat">LV {i.champLevel}</p>
+              <p className="csStat">{this.totalCs(i.endGameMinionKills,i.endGameJungleKills)} CS</p>
+              <p className="csStat csNum"> {this.calculateCs(i.endGameTime, i.endGameMinionKills, i.endGameJungleKills)} CS/Minute </p>
+            </div>
+            <div className="history-right">
+              {i.item0===0? null:<div className="itemWrapper"><img src={this.itemIcon(i.item0)} alt={i.item0} /></div>}
+
+              {i.item1===0? null:<div className="itemWrapper"><img src={this.itemIcon(i.item1)} alt={i.item1} /></div>}
+
+              {i.item2===0? null:<div className="itemWrapper"><img src={this.itemIcon(i.item2)} alt={i.item2} /></div>}
+
+              {i.item3===0? null:<div className="itemWrapper"><img src={this.itemIcon(i.item3)} alt={i.item3} /></div>}
+
+              {i.item4===0? null:<div className="itemWrapper"><img src={this.itemIcon(i.item4)} alt={i.item4} /></div>}
+
+              {i.item5===0? null:<div className="itemWrapper"><img src={this.itemIcon(i.item5)} alt={i.item5} /></div>}
+
+            </div>
+            <div className="history-allPlayers">
+              <div className="history">
+                <img src={this.champIcon(i.t1Champ0)} alt={i.t1Champ0} />
+                <img src={this.champIcon(i.t1Champ1)} alt={i.t1Champ1} />
+                <img src={this.champIcon(i.t1Champ2)} alt={i.t1Champ2} />
+                {i.t1Champ3===undefined? null:<img src={this.champIcon(i.t1Champ3)} alt={i.t1Champ3} /> }
+                {i.t1Champ4===undefined? null:<img src={this.champIcon(i.t1Champ4)} alt={i.t1Champ4} /> }
+              </div>
+              <div className="history">
+                <p className="t1-names" onClick={() => this.sendSearchName(i.t1Name0)}>{i.t1Name0}</p>
+                <p className="t1-names" onClick={() => this.sendSearchName(i.t1Name1)}>{i.t1Name1}</p>
+                <p className="t1-names" onClick={() => this.sendSearchName(i.t1Name2)}>{i.t1Name2}</p>
+                {i.t1Name3===undefined? null:<p className="t1-names" onClick={() => this.sendSearchName(i.t1Name3)}>{i.t1Name3}</p>}
+                {i.t1Name4===undefined? null:<p className="t1-names" onClick={() => this.sendSearchName(i.t1Name4)}>{i.t1Name4}</p>}
+              </div>
+              <div className="history">
+                <img src={i.t2Champ0===undefined ? this.champIcon(i.tt2Champ0):this.champIcon(i.t2Champ0)} alt={i.t2Champ0===undefined ? i.tt2Champ0:i.t2Champ0} />
+                <img src={i.t2Champ1===undefined ? this.champIcon(i.tt2Champ1):this.champIcon(i.t2Champ1)} alt={i.t2Champ1===undefined ? i.tt2Champ1:i.t2Champ1} />
+                <img src={i.t2Champ2===undefined ? this.champIcon(i.tt2Champ2):this.champIcon(i.t2Champ2)} alt={i.t2Champ2===undefined ? i.tt2Champ2:i.t2Champ2} />
+                {i.t2Champ3===undefined? null:<img src={this.champIcon(i.t2Champ3)} alt={i.t2Champ3} /> }
+                {i.t2Champ4===undefined? null:<img src={this.champIcon(i.t2Champ4)} alt={i.t2Champ4} /> }
+              </div>
+              <div className="history">
+                <p className="t2-names" onClick={() => i.t2Name0===undefined? this.sendSearchName(i.tt2Name0):this.sendSearchName(i.t2Name0)}>{i.t2Name0===undefined? i.tt2Name0:i.t2Name0}</p>
+                <p className="t2-names" onClick={() => i.t2Name1===undefined? this.sendSearchName(i.tt2Name1):this.sendSearchName(i.t2Name1)}>{i.t2Name1===undefined? i.tt2Name1:i.t2Name1}</p>
+                <p className="t2-names" onClick={() => i.t2Name2===undefined? this.sendSearchName(i.tt2Name2):this.sendSearchName(i.t2Name2)}>{i.t2Name2===undefined? i.tt2Name2:i.t2Name2}</p>
+                {i.t2Name3===undefined? null:<p className="t2-names" onClick={() => this.sendSearchName(i.t2Name3)}>{i.t2Name3}</p>}
+                {i.t2Name4===undefined? null:<p className="t2-names" onClick={() => this.sendSearchName(i.t2Name4)}>{i.t2Name4}</p>}
+              </div>
+            </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+
+    // const loadMore=(
+    //   <div className="moreData">
+    //     <button onClick={this.fetchMoreGames()}>Load More</button>
+    //   </div>
+    // )
+
     if(this.state.loading){
       return null;
     }else{
@@ -402,75 +503,8 @@ class Result extends React.Component{
             {this.props.flex5RankFound? flex5Rank:null}
             {this.props.flex3RankFound? flex3Rank:null}
         </div>
-        <div id="match-wrapper">
-          {this.props.matches.map((i,key)=>(
-            <div className={i.gameDuration<240 ? `badmatchHistory matchHistory ${i.finalResult}` : `matchHistory ${i.finalResult}`} id={'match_'+i} key={key}>
-              <div className="history-header">
-                <p className="result">{this.queueType(i.queueType)}</p>
-                <p className="result" >{this.timeDifference(i.timeStamp)}</p>
-                <div className="divideLine"></div>
-                {i.gameDuration<240 ? <p className="result"> Remake </p> : <p className={`result ${ this.finalResult(i.finalResult) }`}> {this.finalResult(i.finalResult)} </p>}
-
-                <p className="result" id="gameTime">{this.gameTime(i.gameDuration)}</p>
-              </div>
-              <div className="history-left">
-                <img src={this.champIcon(i.champion)} alt={i.champion}/>
-                <div className="sumSpells">
-                  <img src={this.spellIcon(i.spell1)} alt={i.spell1}/>
-                  <img src={this.spellIcon(i.spell2)} alt={i.spell2}/>
-                </div>
-                <p className="champName">{this.champName(i.champion)}</p>
-              </div>
-              <div className="history-mid">
-                <p className="kda">{i.kills}/<span className="red">{i.deaths}</span>/{i.assists}</p>
-                <p className="csStat csNum">{this.calculateKDA(i.kills,i.deaths,i.assists)} KDA</p>
-              </div>
-              <div className="history-mid">
-                <p className="csStat">LV {i.champLevel}</p>
-                <p className="csStat">{this.totalCs(i.endGameMinionKills,i.endGameJungleKills)} CS</p>
-                <p className="csStat csNum"> {this.calculateCs(i.endGameTime, i.endGameMinionKills, i.endGameJungleKills)} CS/Minute </p>
-              </div>
-              <div className="history-right">
-                {i.item0===0? null:<img src={this.itemIcon(i.item0)} alt={i.item0} />}
-                {i.item1===0? null:<img src={this.itemIcon(i.item1)} alt={i.item1} />}
-                {i.item2===0? null:<img src={this.itemIcon(i.item2)} alt={i.item2} />}
-                {i.item3===0? null:<img src={this.itemIcon(i.item3)} alt={i.item3} />}
-                {i.item4===0? null:<img src={this.itemIcon(i.item4)} alt={i.item4} />}
-                {i.item5===0? null:<img src={this.itemIcon(i.item5)} alt={i.item5} />}
-              </div>
-              <div className="history-allPlayers">
-                <div className="history">
-                  <img src={this.champIcon(i.t1Champ0)} alt={i.t1Champ0} />
-                  <img src={this.champIcon(i.t1Champ1)} alt={i.t1Champ1} />
-                  <img src={this.champIcon(i.t1Champ2)} alt={i.t1Champ2} />
-                  {i.t1Champ3===undefined? null:<img src={this.champIcon(i.t1Champ3)} alt={i.t1Champ3} /> }
-                  {i.t1Champ4===undefined? null:<img src={this.champIcon(i.t1Champ4)} alt={i.t1Champ4} /> }
-                </div>
-                <div className="history">
-                  <p className="t1-names" onClick={() => this.sendSearchName(i.t1Name0)}>{i.t1Name0}</p>
-                  <p className="t1-names" onClick={() => this.sendSearchName(i.t1Name1)}>{i.t1Name1}</p>
-                  <p className="t1-names" onClick={() => this.sendSearchName(i.t1Name2)}>{i.t1Name2}</p>
-                  {i.t1Name3===undefined? null:<p className="t1-names" onClick={() => this.sendSearchName(i.t1Name3)}>{i.t1Name3}</p>}
-                  {i.t1Name4===undefined? null:<p className="t1-names" onClick={() => this.sendSearchName(i.t1Name4)}>{i.t1Name4}</p>}
-                </div>
-                <div className="history">
-                  <img src={i.t2Champ0===undefined ? this.champIcon(i.tt2Champ0):this.champIcon(i.t2Champ0)} alt={i.t2Champ0===undefined ? i.tt2Champ0:i.t2Champ0} />
-                  <img src={i.t2Champ1===undefined ? this.champIcon(i.tt2Champ1):this.champIcon(i.t2Champ1)} alt={i.t2Champ1===undefined ? i.tt2Champ1:i.t2Champ1} />
-                  <img src={i.t2Champ2===undefined ? this.champIcon(i.tt2Champ2):this.champIcon(i.t2Champ2)} alt={i.t2Champ2===undefined ? i.tt2Champ2:i.t2Champ2} />
-                  {i.t2Champ3===undefined? null:<img src={this.champIcon(i.t2Champ3)} alt={i.t2Champ3} /> }
-                  {i.t2Champ4===undefined? null:<img src={this.champIcon(i.t2Champ4)} alt={i.t2Champ4} /> }
-                </div>
-                <div className="history">
-                  <p className="t2-names" onClick={() => i.t2Name0===undefined? this.sendSearchName(i.tt2Name0):this.sendSearchName(i.t2Name0)}>{i.t2Name0===undefined? i.tt2Name0:i.t2Name0}</p>
-                  <p className="t2-names" onClick={() => i.t2Name1===undefined? this.sendSearchName(i.tt2Name1):this.sendSearchName(i.t2Name1)}>{i.t2Name1===undefined? i.tt2Name1:i.t2Name1}</p>
-                  <p className="t2-names" onClick={() => i.t2Name2===undefined? this.sendSearchName(i.tt2Name2):this.sendSearchName(i.t2Name2)}>{i.t2Name2===undefined? i.tt2Name2:i.t2Name2}</p>
-                  {i.t2Name3===undefined? null:<p className="t2-names" onClick={() => this.sendSearchName(i.t2Name3)}>{i.t2Name3}</p>}
-                  {i.t2Name4===undefined? null:<p className="t2-names" onClick={() => this.sendSearchName(i.t2Name4)}>{i.t2Name4}</p>}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        {this.props.moreGames ? null:resultContent}
+        {this.props.moreGames ? resultContent:null}
       </div>
     )
     }

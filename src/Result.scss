@@ -3,7 +3,7 @@
   margin: 0;
 }
 #result-wrapper{
-  width:90%;
+  width:80%;
   height:100vh;
   // background:pink;
   margin-top:80px;
@@ -24,7 +24,7 @@
       height:200px;
       display:flex;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-end;
       list-style-type: none;
       flex-direction: column;
       // background:red;
@@ -34,21 +34,24 @@
         height:35px;
       }
       #level{
-        width:40px;
+        position:absolute;
+        width:80px;
         height:25px;
-        border-radius: 5px;
-        background:#f4c542;
+        border-radius: 4px;
+        background-color: rgba(0, 0, 44, 0.8);
         color:#fff;
+        border:1px solid #f4c542;
       }
       img{
-        width:100px;
-        height:100px;
-        border:1px solid #f4c542;
+        width:150px;
+        height:150px;
+        border-radius:5px;
+        // border:1px solid #f4c542;
       }
     }
     .rankSlot{
       width:250px;
-      height:200px;
+      height:150px;
       display:flex;
       .rankImg{
         width:100px;
@@ -69,6 +72,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        margin-top:-10px;
         img{
           width:120px;
           height:120px;
@@ -107,133 +111,206 @@
     .badmatchHistory{
       background:#ccc !important;
       border:1px solid #aaa !important;
+
       .Victory,.Defeat{
         color:#000 !important;
       }
     }
-    .matchHistory{
-      display:flex;
-      align-items: center;
-      justify-content: space-evenly;
-      width:100%;
-      height:180px;
-      margin:10px 0;
-      border:1px solid #ccc;
-      .history-header,.history-left,.history-right,.history-mid{
-        width:150px;
-        height:150px;
-        // background:blue;
-        display:flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        // border:1px solid #ccc;
-        .result{
-          font-weight:500;
-          font-size:.8em;
-        }
-        .champName{
-          font-weight:500;
-        }
-        img{
-          width:80px;
-          height:80px;
-          // border:1px solid #f4c542;
-          display:flex;
-        }
-      }
-      .history-header{
-        height:100px;
-        width:100px;
-        justify-content: space-evenly;
-        .divideLine{
-          height:1px;
-          width:60px;
-          background:#000;
-          margin:5px 0;
-        }
-        .Defeat{
-          color:#e2144a;
-        }
-        .Victory{
-          color:#148ce2;
-        }
-      }
-      .history-left{
-        width:100px;
-        .sumSpells{
-          display:flex;
-          img{
-            width:40px;
-            height:40px;
-          }
-        }
-      }
-      .history-mid{
-        width:100px;
-        font-size:1em;
-        .kda{
-          font-weight:500;
-          font-size:1.5em;
-          .red{
-            color:#e2144a;
-          }
-        }
-        .csStat{
-          font-size:0.8em;
-        }
-        .csNum{
-          font-weight:500;
-        }
-      }
-      .history-right{
-        // background:red;
-        display:flex;
-        flex-direction: row;
-        width:300px;
-        img{
-          width:40px;
-          height:40px;
-        }
-      }
-      .history-allPlayers{
-        height:150px;
-        width:350px;
-        display:flex;
-        justify-content: flex-end;
-        // background:pink;
-        .history{
-          height:150px;
-          display:flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-        }
-        .t1-names,.t2-names{
-          height:30px;
-          width:120px;
-          display: flex;
-          font-size:.8em;
-          justify-content: flex-start;
-          align-items: center;
-          padding-left:5px;
-          cursor:pointer;
-          // background:green;
-        }
-        .t1-names:hover,.t2-names:hover{
-          color:#333;
-        }
-        img{
-          width:30px;
-        }
-      }
-    }
     .Win{
-      background:#aed3f2;
+      background:rgb(181, 216, 255);
+      .history-header{
+        background:rgb(135, 171, 211) !important;
+        color:rgb(83, 98, 114) !important;
+      }
     }
     .Fail{
-      background:#f9cbb8;
+      background:rgb(247, 187, 187);
+      .history-header{
+        background:rgb(209, 154, 154) !important;
+        color:rgb(114, 83, 83) !important;
+      }
     }
+    .matchHistory{
+      border-radius: 5px;
+      display:flex;
+      flex-direction: column;
+      align-items: space-evenly;
+      justify-content: space-evenly;
+      width:100%;
+      height:200px;
+      margin:10px 0;
+      // border:1px solid #ccc;
+      .history-header{
+        height:30px;
+        width:100%;
+        display:flex;
+        justify-content: space-between;
+        background:#ccc;
+        font-weight:400;
+        font-size:0.8em;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        #queueType{
+          font-weight:500;
+        }
+        .history-header-left{
+          display:flex;
+          align-items: center;
+          justify-content: space-evenly;
+          width:250px;
+          .divideLine{
+            height:1px;
+            width:5px;
+            background:#333;
+          }
+        }
+        .history-header-right{
+          display:flex;
+          align-items: center;
+          justify-content: space-evenly;
+          width:80px;
+        }
+        .Defeat{
+          color:rgb(114, 83, 83);
+          font-weight:500;
+        }
+        .Victory{
+          color:rgb(83, 98, 114);
+          font-weight:500;
+        }
+      }
+      .history-body{
+        display:flex;
+        align-items: center;
+        justify-content: space-evenly;
+        .history-left,.history-right,.history-mid,.history-mid2{
+          width:150px;
+          height:150px;
+          overflow:hidden;
+          // background:blue;
+          display:flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          // border:1px solid #ccc;
+          .result{
+            font-weight:500;
+            font-size:.8em;
+          }
+          .champName{
+            font-weight:500;
+          }
+        }
 
+        .history-left{
+          width:100px;
+          height:200px;
+          .sumChamp{
+            width:100px;
+            height:100px;
+            overflow:hidden;
+            border-radius: 5px;
+            img{
+              margin-left:-10px;
+              margin-top:-8px;
+              width:120px;
+              height:120px;
+            }
+          }
+          .sumSpells{
+            display:flex;
+            height:50px;
+            width:100px;
+            justify-content: space-between;
+            .spellWrapper{
+              margin-top:6px;
+              overflow:hidden;
+              height:45px;
+              width:45px;
+              border-radius: 5px;
+            }
+            img{
+              margin-left:-2px;
+              margin-top:-2px;
+              width:50px;
+              height:50px;
+            }
+          }
+        }
+        .history-mid{
+          width:130px;
+          font-size:1em;
+          .kda{
+            font-weight:500;
+            font-size:1.5em;
+            letter-spacing: 5px;
+            .red{
+              color:#e2144a;
+            }
+          }
+        }
+        .history-mid2{
+          width:100px;
+          font-size:1em;
+          .csStat{
+            font-size:0.8em;
+          }
+          .csNum{
+            font-weight:500;
+          }
+        }
+        .history-right{
+          // background:red;
+          display:flex;
+          flex-direction: row;
+          width:300px;
+          .itemWrapper{
+            overflow:hidden;
+            width:45px;
+            height:45px;
+            border-radius: 5px;
+            margin-right:2px;
+            img{
+              width:50px;
+              height:50px;
+              margin-left:-2px;
+              margin-top:-2px;
+            }
+          }
+        }
+        .history-allPlayers{
+          height:150px;
+          width:350px;
+          display:flex;
+          justify-content: flex-end;
+          // background:pink;
+          .history{
+            height:150px;
+            display:flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+          }
+          .t1-names,.t2-names{
+            height:30px;
+            width:120px;
+            display: flex;
+            font-size:.8em;
+            justify-content: flex-start;
+            align-items: center;
+            padding-left:5px;
+            cursor:pointer;
+            // background:green;
+          }
+          .t1-names:hover,.t2-names:hover{
+            color:#333;
+          }
+          img{
+            width:30px;
+          }
+        }
+      }
+
+    }
   }
 }
