@@ -4,11 +4,23 @@ import $ from 'jquery';
 import Result from './Result';
 import { fetchMatchDetails, fetchSummoner, fetchMatch , fetchRankDetail , fetchTimeLine } from './Fetcher.js';
 import { animateScroll as scroll } from 'react-scroll';
+import posed from 'react-pose';
+
+const Appear = posed.div({
+  hidden: {opacity:0},
+  visible:{opacity: 1,
+    translateY:'-105px',
+    transition: {
+      opacity: { ease: 'easeOut', duration: 300, delay:500 },
+      default: { ease: 'linear', duration: 500 }
+    }}
+})
 
 class SearchBar extends React.Component{
   constructor(props){
     super(props)
     this.state=({
+      loaded:false,
       numOfSearch:3,
       originalNumOfSearch:3,
       firstSearch:true,
@@ -131,7 +143,7 @@ class SearchBar extends React.Component{
       // $('#result-content').fadeIn(2000);
       $('#SearchBar').addClass('navSearch');
       this.setState({
-        firstSearch:false
+        firstSearch:false,
       })
       if(!this.state.firstSearch){
         $('#SearchBar').fadeIn(1000);
@@ -715,7 +727,7 @@ class SearchBar extends React.Component{
         <input id="sumName" type="text" placeholder="Summoner Name"/>
         <button id="submit" onClick={this.newSearch}>Search</button>
       </div>
-      {this.state.match? <div id="SearchResult">
+      {this.state.match? <div id="SearchResult" pose={this.state.match ? 'visible' : 'hidden'}>
         <Result
         name={this.state.currentAccount['name']}
         level={this.state.currentAccount['level']}
@@ -751,7 +763,7 @@ class SearchBar extends React.Component{
 
         moreGames={this.state.moreGames}
         />
-        <span id="fetchMore" onClick={this.fetchMoreGames}> more games</span>
+        <Appear id="fetchMore" onClick={this.fetchMoreGames} pose={this.state.firstSearch? 'hidden' : 'visible'}> more games</Appear>
       </div> :null}
       <div id="bottom" name="scroll-to-element"></div>
       </div>
