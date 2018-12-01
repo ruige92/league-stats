@@ -374,7 +374,7 @@ class SearchBar extends React.Component{
       this.setState({
         matches:arr
       })
-      console.log(this.state.matches)
+      // console.log(this.state.matches)
       //Have to call method here;
       this.getMatchDetails3();
       this.getTimeline();
@@ -405,7 +405,7 @@ class SearchBar extends React.Component{
     for(let i = this.state.searchIndex; i<this.state.numOfSearch;i++){
       results = fetchMatchDetails("test", this.state.region, gameIds[i], this.state.apiKey)
       results.then(res=>{
-        console.log(res)
+        // console.log(res)
         if((res['gameMode']==="TUTORIAL_MODULE_3") || (res['gameMode']==="TUTORIAL_MODULE_2") || (res['gameMode']==="TUTORIAL_MODULE_1")){
           this.setState({
             error:'No recent data for this summoner',
@@ -598,7 +598,7 @@ class SearchBar extends React.Component{
           // console.log(matches2[0]['currentParticipantNum']);
           // console.log(matches2[1]['currentParticipantNum']);
           // console.log(matches2[2]['currentParticipantNum']);
-          console.log(participants);
+          // console.log(participants);
           // console.log('partNum: '+matches2[i]['currentParticipantNum']);
           // console.log(res['frames'][index]);
           // console.log(res['frames'][index]['participantFrames'][this.state.matches[i]['currentParticipantNum']]);
